@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="gl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concordia - modelo visual da flexion latina</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="navgroup">
+      <div class="navtitle">Formas</div>
+      <button class="navitem active" data-section="nominal"><span>Flexión nominal</span><small>FN</small></button>
+      <button class="navitem" data-section="statements"><span>Enunciados</span><small>EN</small></button>
+      <button class="navitem" data-section="agreement"><span>Concordancia</span><small>CO</small></button>
+      <button class="navitem" data-section="adjectives"><span>Adxectivos</span><small>AD</small></button>
+      <button class="navitem" data-section="pronouns"><span>Flexión pronominal</span><small>PR</small></button>
+      <button class="navitem" data-section="verbs"><span>Flexión verbal</span><small>VB</small></button>
+    </div>
+
+    <div class="navgroup">
+      <div class="navtitle">Casos</div>
+      <button class="navitem" data-section="nominative"><span>Nominativo</span><small>NOM</small></button>
+      <button class="navitem" data-section="vocative"><span>Vocativo</span><small>VOC</small></button>
+      <button class="navitem" data-section="accusative"><span>Acusativo</span><small>AC</small></button>
+      <button class="navitem" data-section="genitive"><span>Xenitivo</span><small>XEN</small></button>
+      <button class="navitem" data-section="dative"><span>Dativo</span><small>DAT</small></button>
+      <button class="navitem" data-section="ablative"><span>Ablativo</span><small>ABL</small></button>
+    </div>
+
+    <div class="navgroup">
+      <div class="navtitle">Estruturas</div>
+      <button class="navitem" data-section="prepositions"><span>Preposicións</span><small>PP</small></button>
+      <button class="navitem" data-section="connectors"><span>Conectores</span><small>CN</small></button>
+      <button class="navitem" data-section="questions"><span>Interrogativas</span><small>IN</small></button>
+      <button class="navitem" data-section="participle"><span>Participio</span><small>PT</small></button>
+      <button class="navitem" data-section="aci"><span>Infinitivo / AcI</span><small>AI</small></button>
+      <button class="navitem" data-section="relative"><span>Relativo</span><small>RL</small></button>
+      <button class="navitem" data-section="cum"><span>cum</span><small>CU</small></button>
+      <button class="navitem" data-section="ut"><span>ut / ne</span><small>UT</small></button>
+    </div>
+
+    <div class="side-note">A lateral escolle o fenómeno. A superior escolle con que material se ve.</div>
+  </aside>
+
+  <main class="main">
+    <header class="topline">
+      <div class="crumb" id="crumb">Formas · Flexión nominal</div>
+      <button class="classroom-toggle" id="classroomToggle" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span><span>Modo aula</span></button>
+    </header>
+
+    <nav class="subnav" id="subnav"></nav>
+
+    <section class="workspace">
+      <div class="surface">
+        <div class="surface-head">
+          <div>
+            <h1 id="title">A flexión nominal como sistema</h1>
+            <p class="lede" id="lede">Pasa por un caso e todas as declinacións responden ao mesmo tempo.</p>
+          </div>
+          <div class="segmented" id="modeControls"></div>
+        </div>
+        <div class="panel-body">
+          <div id="nominalView"></div>
+          <div id="statementsView" class="hidden"></div>
+          <div id="agreementView" class="hidden"></div>
+          <div id="adjectivesView" class="hidden"></div>
+          <div id="pronounsView" class="hidden"></div>
+          <div id="ambiguityView" class="hidden"></div>
+          <div id="placeholderView" class="hidden"></div>
+        </div>
+      </div>
+
+      <aside class="rail">
+        <div class="inspector">
+          <h2>Lectura activa</h2>
+          <div class="fact"><strong>Concepto</strong><span id="conceptFact">Flexión</span></div>
+          <div class="fact"><strong>Foco</strong><span id="focusFact">Caso atravesando paradigmas</span></div>
+          <div class="fact"><strong>Sinal</strong><span id="signalFact">Os trazos compártense, as terminacións poden variar.</span></div>
+        </div>
+        <div class="inspector">
+          <h2>Código de xénero</h2>
+          <div class="mini-map">
+            <div class="legend-row"><span class="gender-marker feminine">♀</span><span>feminino</span></div>
+            <div class="legend-row"><span class="gender-marker masculine">♂</span><span>masculino</span></div>
+            <div class="legend-row"><span class="gender-marker neuter">⚲</span><span>neutro</span></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
