@@ -11,9 +11,9 @@
   <aside class="sidebar">
     <div class="navgroup">
       <div class="navtitle">Formas</div>
-      <button class="navitem active" data-section="nominal"><span>Flexión nominal</span><small>FN</small></button>
-      <button class="navitem" data-section="statements"><span>Enunciados</span><small>EN</small></button>
-      <button class="navitem" data-section="agreement"><span>Concordancia</span><small>CO</small></button>
+      <button class="navitem active" data-section="nominal" data-greek><span>Flexión nominal</span><small>FN</small></button>
+      <button class="navitem" data-section="statements" data-greek><span>Enunciados</span><small>EN</small></button>
+      <button class="navitem" data-section="agreement" data-greek><span>Concordancia</span><small>CO</small></button>
       <button class="navitem" data-section="adjectives"><span>Adxectivos</span><small>AD</small></button>
       <button class="navitem" data-section="pronouns"><span>Flexión pronominal</span><small>PR</small></button>
       <button class="navitem" data-section="verbs"><span>Flexión verbal</span><small>VB</small></button>
@@ -47,7 +47,13 @@
   <main class="main">
     <header class="topline">
       <div class="crumb" id="crumb">Formas · Flexión nominal</div>
-      <button class="classroom-toggle" id="classroomToggle" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span><span>Modo aula</span></button>
+      <div class="top-actions">
+        <div class="language-switch" aria-label="Lingua">
+          <button class="active" type="button" data-language="latin">LAT</button>
+          <button type="button" data-language="greek">ΕΛ</button>
+        </div>
+        <button class="classroom-toggle" id="classroomToggle" type="button" aria-pressed="false"><span aria-hidden="true">⛶</span><span>Modo aula</span></button>
+      </div>
     </header>
 
     <nav class="subnav" id="subnav"></nav>
@@ -92,7 +98,8 @@
   </main>
 </div>
 
-<script src="data.js"></script>
+<script src="latin-data.js"></script>
+<script src="greek-data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

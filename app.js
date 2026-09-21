@@ -1,11 +1,13 @@
 
 
 let state = {
+  language:"latin",
   section:"nominal",
   tab:"Visión xeral",
   case:"AC",
   mode:"case",
   nominalVariant:{"1":"insula","2":"fluvius","3":"mercator"},
+  greekVariant:{"1":"chora","2":"logos","3":"phylax"},
   showAdvanced:false,
   gender:"all",
   agreement:3,
@@ -15,6 +17,16 @@ let state = {
   predicate:0,
   ambiguity:"bare"
 };
+
+const greekSectionConfig = {
+  nominal:{crumb:"Formas · Flexión nominal grega",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por caso","Por xénero"],kind:"nominal"},
+  statements:{crumb:"Formas · Enunciados gregos",tabs:[],kind:"statements"},
+  agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"}
+};
+
+function currentConfig(){
+  return state.language === "greek" ? greekSectionConfig[state.section] : sectionConfig[state.section];
+}
 
 const $ = selector => document.querySelector(selector);
 
@@ -103,7 +115,7 @@ function declensionCard(decl){
 }
 
 function renderSubnav(){
-  const config = sectionConfig[state.section];
+  const config = currentConfig();
   $("#crumb").textContent = config.crumb;
   $("#subnav").innerHTML = config.tabs.map(tab => `<button class="${tab===state.tab?"active":""}" data-tab="${tab}">${tab}</button>`).join("");
   document.querySelectorAll("#subnav button").forEach(button => {
@@ -136,9 +148,10 @@ function renderModeControls(){
       state.mode = button.dataset.mode;
       render();
     });
-  } else if(state.section === "agreement" && !["Suxeito · atributo","Xénero","Número"].includes(state.tab)){
+  } else if(state.section === "agreement" && !["Suxeito · atributo","Xénero","Número","Neutro"].includes(state.tab)){
     box.classList.remove("hidden");
-    box.innerHTML = `<label class="example-select-label">Exemplo <select id="agreementSelect">${agreementExamples.map((example,index) => `<option value="${index}" ${index===state.agreement?"selected":""}>${example.label}</option>`).join("")}</select></label>`;
+    const examples = state.language === "greek" ? greekAgreementExamples : agreementExamples;
+    box.innerHTML = `<label class="example-select-label">Exemplo <select id="agreementSelect">${examples.map((example,index) => `<option value="${index}" ${index===state.agreement?"selected":""}>${example.label}</option>`).join("")}</select></label>`;
     $("#agreementSelect").onchange = event => {
       state.agreement = Number(event.target.value);
       render();
@@ -149,6 +162,10 @@ function renderModeControls(){
 }
 
 function renderNominal(){
+  if(state.language === "greek"){
+    renderGreekNominal();
+    return;
+  }
   setVisible("nominalView");
   $("#title").textContent = state.mode === "gender" ? "Declinación non é xénero" : "A flexión nominal como sistema";
   $("#lede").textContent = state.mode === "case"
@@ -202,6 +219,67 @@ function renderNominal(){
   });
 }
 
+function greekModel(decl){
+  const variants = greekGrammar.variants[decl.id];
+  return variants.find(item => item.id === state.greekVariant[decl.id]) || variants[0];
+}
+
+function greekDeclensionCard(decl){
+  const model = greekModel(decl);
+  const variants = greekGrammar.variants[decl.id];
+  return `
+    <article class="decl-card greek-card ${genderInfo[model.gender].className}">
+      <div class="decl-head">
+        <strong>${decl.name} declinación</strong>
+        <span class="genders">${decl.genders.map(gender => genderMark(gender)).join("")}</span>
+      </div>
+      <div class="lexemes">
+        <div class="lexeme"><span class="greek-article">${model.article}</span> ${model.word}<small>${genderMark(model.gender,true)}</small></div>
+        <div class="lede">${model.note}, ${model.article}</div>
+        <div class="variant-bar">${variants.map(item => `<button class="variant-button ${item.id===model.id?"active":""}" data-greek-decl="${decl.id}" data-greek-variant="${item.id}">${item.label}</button>`).join("")}</div>
+      </div>
+      <div class="number-head"><span>CASO</span><span>SG</span><span>PL</span></div>
+      <div class="forms">
+        ${greekGrammar.cases.map(grammaticalCase => `
+          <div class="case-row ${grammaticalCase===state.case?"active":""}" data-greek-case="${grammaticalCase}">
+            <span class="case-label">${grammaticalCase}</span>
+            <span class="form-word">${endingMarkup(model.sg[grammaticalCase],model.endings.sg[grammaticalCase])}</span>
+            <span class="form-word">${endingMarkup(model.pl[grammaticalCase],model.endings.pl[grammaticalCase])}</span>
+          </div>`).join("")}
+      </div>
+    </article>`;
+}
+
+function renderGreekNominal(){
+  setVisible("nominalView");
+  const activeDecl = state.tab.match(/^([1-3])\.ª$/)?.[1];
+  const visibleDecls = activeDecl ? greekGrammar.declensions.filter(decl => decl.id === activeDecl) : greekGrammar.declensions;
+  if(state.mode === "gender"){
+    $("#title").textContent = "Declinación non é xénero";
+    $("#lede").textContent = "O artigo do enunciado fai visible o xénero, tamén cando a terminación non abonda.";
+    $("#conceptFact").textContent = "Xénero en grego";
+    $("#focusFact").textContent = "ὁ · ἡ · τό";
+    $("#signalFact").textContent = "A declinación e o xénero son informacións distintas.";
+    const groups = {M:[["νεανίας","1.ª"],["λόγος","2.ª"],["φύλαξ","3.ª"]],F:[["χώρα","1.ª"],["τιμή","1.ª"],["πόλις","3.ª"]],N:[["δῶρον","2.ª"],["σῶμα","3.ª"]]};
+    $("#nominalView").innerHTML = `<div class="gender-view">${Object.entries(groups).map(([gender,items]) => `<article class="gender-column ${genderInfo[gender].className}"><h3>${genderMark(gender,true)}</h3>${items.map(([word,decl]) => `<div class="gender-item"><span>${word}</span><span>${decl} decl.</span></div>`).join("")}</article>`).join("")}</div>`;
+    return;
+  }
+  $("#title").textContent = "A flexión nominal grega como sistema";
+  $("#lede").textContent = state.mode === "case" ? "Un mesmo caso atravesa as tres declinacións; cada columna mostra singular e plural ao mesmo tempo." : "Explora cada paradigma e cambia o substantivo modelo sen abandonar a declinación.";
+  $("#conceptFact").textContent = "Flexión grega";
+  $("#focusFact").textContent = state.mode === "case" ? `${greekGrammar.caseNames[state.case] || "nominativo"} en singular e plural` : "Paradigmas nominais";
+  $("#signalFact").textContent = "O grego conserva cinco casos; non ten ablativo.";
+  $("#nominalView").innerHTML = `
+    <div class="nominal-grid ${visibleDecls.length===1?"single":""}">${visibleDecls.map(greekDeclensionCard).join("")}</div>
+    <div class="ending-summary ${visibleDecls.length===1?"single":""}">${visibleDecls.map(decl => { const model=greekModel(decl); return `<div class="ending-cell"><strong>${decl.name} · NOM / XEN</strong><span class="ending-pair">${model.sg.NOM} · ${model.sg.XEN}</span></div>`; }).join("")}</div>`;
+  document.querySelectorAll("[data-greek-variant]").forEach(button => button.onclick = event => { event.stopPropagation(); state.greekVariant[button.dataset.greekDecl] = button.dataset.greekVariant; renderGreekNominal(); });
+  document.querySelectorAll("[data-greek-case]").forEach(row => {
+    row.onclick = () => { state.case = row.dataset.greekCase; renderGreekNominal(); };
+    row.onmouseenter = () => document.querySelectorAll(`[data-greek-case="${row.dataset.greekCase}"]`).forEach(peer => peer.classList.add("peer-hover"));
+    row.onmouseleave = () => document.querySelectorAll("[data-greek-case]").forEach(peer => peer.classList.remove("peer-hover"));
+  });
+}
+
 function renderGenderView(){
   const groups = {
     M:[["poeta","1.ª"],["fluvius","2.ª"],["puer","2.ª"],["vir","2.ª"],["mercator","3.ª"]],
@@ -221,6 +299,10 @@ function renderGenderView(){
 }
 
 function renderStatements(){
+  if(state.language === "greek"){
+    renderGreekStatements();
+    return;
+  }
   setVisible("statementsView");
   $("#title").textContent = "O enunciado identifica a palabra";
   $("#lede").textContent = "Nos substantivos dáse sempre o nominativo singular e o xenitivo singular.";
@@ -255,6 +337,34 @@ function renderStatements(){
         <span><strong>fluvius, fluvii</strong> · 2.ª</span>
         <span><strong>oppidum, oppidi</strong> · 2.ª ⚲</span>
         <span><strong>mercator, mercatoris</strong> · 3.ª</span>
+      </div>
+    </div>`;
+}
+
+function renderGreekStatements(){
+  setVisible("statementsView");
+  $("#title").textContent = "O enunciado identifica a palabra grega";
+  $("#lede").textContent = "Nos substantivos dáse nominativo singular, xenitivo singular e artigo.";
+  $("#conceptFact").textContent = "Enunciado nominal";
+  $("#focusFact").textContent = "NOM SG + XEN SG + artigo";
+  $("#signalFact").textContent = "O xenitivo revela o tema; o artigo indica o xénero.";
+  $("#statementsView").innerHTML = `
+    <div class="statement-demo greek-statement">
+      <div class="statement-rule"><span>NOMINATIVO SINGULAR</span><strong>+</strong><span>XENITIVO SINGULAR</span><strong>+</strong><span>ARTIGO</span></div>
+      <p class="lesson-intro">O enunciado é a forma base coa que identificamos un substantivo. Non é unha tradución: contén a información necesaria para saber como se declina e de que xénero é.</p>
+      <div class="greek-enunciation-focus"><span>Non abonda con ver</span><strong>σῶμα</strong><span>O enunciado completo é</span><b>σῶμα, σώματος, τό</b></div>
+      <div class="statement-paths three-paths">
+        <article class="statement-path"><span class="path-label">NOM SG</span><strong>σῶμα</strong><span>forma pola que comeza o enunciado</span></article>
+        <article class="statement-path"><span class="path-label">XEN SG</span><strong>σώματος</strong><span>revela o tema σωματ- e a 3.ª declinación</span></article>
+        <article class="statement-path neuter"><span class="path-label">ARTIGO</span><strong>τό</strong><span>indica que o substantivo é neutro</span></article>
+      </div>
+      <div class="statement-examples greek-examples">
+        <span><strong>χώρα, χώρας, ἡ</strong> · 1.ª ♀</span>
+        <span><strong>λόγος, λόγου, ὁ</strong> · 2.ª ♂</span>
+        <span><strong>δῶρον, δώρου, τό</strong> · 2.ª ⚲</span>
+        <span><strong>φύλαξ, φύλακος, ὁ</strong> · 3.ª ♂</span>
+        <span><strong>πόλις, πόλεως, ἡ</strong> · 3.ª ♀</span>
+        <span><strong>σῶμα, σώματος, τό</strong> · 3.ª ⚲</span>
       </div>
     </div>`;
 }
@@ -360,6 +470,10 @@ function renderPronouns(){
 }
 
 function renderAgreement(){
+  if(state.language === "greek"){
+    renderGreekAgreement();
+    return;
+  }
   setVisible("agreementView");
   if(state.tab === "Suxeito · atributo"){
     const example = predicateExamples[state.predicate];
@@ -451,6 +565,46 @@ function renderAgreement(){
   });
 }
 
+function renderGreekAgreement(){
+  setVisible("agreementView");
+  if(state.tab === "Suxeito · atributo"){
+    const example = greekPredicateExamples[state.predicate % greekPredicateExamples.length];
+    const marked = example.sentence.replace(example.subject,`<span class="syntax-subject">${example.subject}</span>`).replace(example.attribute,`<span class="syntax-attribute">${example.attribute}</span>`);
+    $("#title").textContent = "Concordancia entre suxeito e atributo";
+    $("#lede").textContent = "O atributo refírese ao suxeito e comparte con el caso, número e, cando corresponde, xénero.";
+    $("#conceptFact").textContent = "Suxeito · atributo";
+    $("#focusFact").textContent = example.traits;
+    $("#signalFact").textContent = "A concordancia permanece aínda que a cópula estea elidida.";
+    $("#agreementView").innerHTML = `<div class="predicate-lab greek-predicate"><div class="predicate-picker"><label>Exemplo <select id="predicateSelect">${greekPredicateExamples.map((item,index) => `<option value="${index}" ${index===state.predicate%greekPredicateExamples.length?"selected":""}>${index+1}. ${item.sentence}</option>`).join("")}</select></label></div><div class="predicate-sentence">${marked}</div><div class="syntax-legend"><span><i class="subject-dot"></i>Suxeito</span><span><i class="attribute-dot"></i>Atributo</span><strong>${example.traits}</strong></div><div class="predicate-actions"><button data-predicate-step="-1">← Anterior</button><button data-predicate-step="1">Seguinte →</button></div></div>`;
+    $("#predicateSelect").onchange = event => { state.predicate=Number(event.target.value); renderGreekAgreement(); };
+    document.querySelectorAll("[data-predicate-step]").forEach(button => button.onclick = () => { state.predicate=(state.predicate+Number(button.dataset.predicateStep)+greekPredicateExamples.length)%greekPredicateExamples.length; renderGreekAgreement(); });
+    return;
+  }
+  if(state.tab === "Xénero"){
+    $("#title").textContent = "Unha relación, tres xéneros";
+    $("#lede").textContent = "O adxectivo adopta a forma que corresponde ao xénero do substantivo.";
+    $("#conceptFact").textContent = "Concordancia"; $("#focusFact").textContent = "Contraste de xénero"; $("#signalFact").textContent = "σοφός · σοφή · σοφόν expresan o mesmo trazo con formas distintas.";
+    $("#agreementView").innerHTML = `<div class="gender-contrast greek-contrast"><article class="contrast-item masculine">${genderMark("M",true)}<div>σοφὸς <strong>ἄνθρωπος</strong></div></article><article class="contrast-item feminine">${genderMark("F",true)}<div>σοφὴ <strong>ψυχή</strong></div></article><article class="contrast-item neuter">${genderMark("N",true)}<div>σοφὸν <strong>ζῷον</strong></div></article></div>`;
+    return;
+  }
+  if(state.tab === "Número"){
+    const pairs=[["ὁ ἄνθρωπος","οἱ ἄνθρωποι","♂"],["ὁ θεός","οἱ θεοί","♂"],["ὁ πολίτης","οἱ πολῖται","♂"],["ἡ ψυχή","αἱ ψυχαί","♀"],["ἡ πολιτεία","αἱ πολιτεῖαι","♀"],["τὸ ζῷον","τὰ ζῷα","⚲"]];
+    $("#title").textContent="O número transforma o sintagma"; $("#lede").textContent="Artigo, substantivo e adxectivo responden xuntos ao cambio de número."; $("#conceptFact").textContent="Número"; $("#focusFact").textContent="Singular ↔ plural"; $("#signalFact").textContent="No neutro, nominativo e acusativo plural rematan en -α.";
+    $("#agreementView").innerHTML=`<div class="number-pairs">${pairs.map(([singular,plural,symbol])=>`<article><span>${singular}</span><b>→</b><span>${plural}</span><small>${symbol}</small></article>`).join("")}</div>`;
+    return;
+  }
+  if(state.tab === "Neutro"){
+    $("#title").textContent="O neutro ten un comportamento propio"; $("#lede").textContent="No neutro coinciden nominativo e acusativo; o plural en -α pode levar o verbo en singular."; $("#conceptFact").textContent="Neutro"; $("#focusFact").textContent="τὸ δίκαιον · τὰ δίκαια"; $("#signalFact").textContent="τὰ ζῷα ψυχὴν ἔχει: o suxeito neutro plural aparece con ἔχει en singular.";
+    $("#agreementView").innerHTML=`<div class="neuter-lab"><article><span>Un concepto</span><strong>τὸ δίκαιον</strong><small>o xusto</small></article><article><span>Realidades concretas</span><strong>τὰ δίκαια</strong><small>as cousas xustas</small></article><div class="neuter-sentence">τὰ ζῷα <mark>ψυχὴν</mark> <b>ἔχει</b><small>suxeito neutro plural · verbo singular</small></div></div>`;
+    return;
+  }
+  const example=greekAgreementExamples[state.agreement] || greekAgreementExamples[0];
+  $("#title").textContent="As palabras concordan en trazos"; $("#lede").textContent="Cambia o caso e observa como substantivo e adxectivo responden xuntos."; $("#conceptFact").textContent="Concordancia nominal"; $("#focusFact").textContent=`${greekGrammar.caseNames[state.case]} · ${example.traits}`; $("#signalFact").textContent="Concordar significa compartir caso, número e xénero, non acabar necesariamente igual.";
+  const words=example.words[state.case]; const endings=example.endings[state.case];
+  $("#agreementView").innerHTML=`<div class="agreement-stage ${genderInfo[example.gender].className}"><div class="phrase">${words.map((word,index)=>`<div class="token"><div class="latin-word">${endingMarkup(word,endings[index])}</div><div class="meta"><span>${example.meta[index]}</span></div></div>`).join("")}</div><div class="trait-band"><span class="trait-chip">${state.case} · ${example.traits}</span></div><div class="case-actions">${greekGrammar.cases.map(grammaticalCase=>`<button class="${grammaticalCase===state.case?"active":""}" data-greek-agreement-case="${grammaticalCase}">${grammaticalCase}</button>`).join("")}</div></div>`;
+  document.querySelectorAll("[data-greek-agreement-case]").forEach(button=>button.onclick=()=>{state.case=button.dataset.greekAgreementCase;renderGreekAgreement();});
+}
+
 function renderAmbiguity(){
   setVisible("ambiguityView");
   const contexts = {
@@ -508,7 +662,7 @@ function renderPlaceholder(){
 }
 
 function render(){
-  const config = sectionConfig[state.section];
+  const config = currentConfig();
   renderSubnav();
   renderModeControls();
   if(config.kind === "nominal") renderNominal();
@@ -526,10 +680,29 @@ document.querySelectorAll(".navitem").forEach(button => {
     state.section = button.dataset.section;
     state.tab = sectionConfig[state.section].tabs[0];
     if(state.section === "nominal") state.mode = "case";
-    if(state.section === "agreement") state.agreement = agreementExamples.findIndex(example => example.id === "fluvius-magnus");
+    if(state.section === "agreement") state.agreement = state.language === "greek" ? 0 : agreementExamples.findIndex(example => example.id === "fluvius-magnus");
     render();
   };
 });
+
+function setLanguage(language){
+  state.language = language;
+  document.documentElement.lang = language === "greek" ? "grc" : "gl";
+  document.body.classList.toggle("greek-mode",language === "greek");
+  document.querySelectorAll("[data-language]").forEach(button => button.classList.toggle("active",button.dataset.language === language));
+  document.querySelectorAll(".navitem").forEach(item => item.hidden = language === "greek" && !item.hasAttribute("data-greek"));
+  document.querySelectorAll(".navgroup").forEach(group => group.hidden = !group.querySelector(".navitem:not([hidden])"));
+  if(language === "greek" && !greekSectionConfig[state.section]) state.section = "nominal";
+  state.tab = currentConfig().tabs[0] || "";
+  state.mode = "case";
+  state.case = language === "greek" ? "AC" : state.case;
+  state.agreement = 0;
+  state.predicate = 0;
+  document.querySelectorAll(".navitem").forEach(item => item.classList.toggle("active",item.dataset.section === state.section));
+  render();
+}
+
+document.querySelectorAll("[data-language]").forEach(button => button.onclick = () => setLanguage(button.dataset.language));
 
 const classroomToggle = $("#classroomToggle");
 function setClassroomMode(active){
@@ -553,14 +726,15 @@ document.addEventListener("fullscreenchange",() => {
 });
 
 document.addEventListener("keydown", event => {
+  const activeCases = state.language === "greek" ? greekGrammar.cases : cases;
   if(event.key === "ArrowDown" || event.key === "ArrowRight"){
-    const index = cases.indexOf(state.case);
-    state.case = cases[(index + 1) % cases.length];
+    const index = activeCases.indexOf(state.case);
+    state.case = activeCases[(index + 1) % activeCases.length];
     render();
   }
   if(event.key === "ArrowUp" || event.key === "ArrowLeft"){
-    const index = cases.indexOf(state.case);
-    state.case = cases[(index - 1 + cases.length) % cases.length];
+    const index = activeCases.indexOf(state.case);
+    state.case = activeCases[(index - 1 + activeCases.length) % activeCases.length];
     render();
   }
 });
