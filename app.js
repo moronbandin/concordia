@@ -6,7 +6,7 @@ let state = {
   tab:"Visión xeral",
   case:"AC",
   mode:"case",
-  nominalVariant:{"1":"insula","2":"fluvius","3":"mercator"},
+  nominalVariant:{"1":"insula","2":"dominus","3":"mercator"},
   greekVariant:{"1":"chora","2":"logos","3":"phylax"},
   showAdvanced:false,
   gender:"all",
@@ -334,8 +334,8 @@ function renderStatements(){
       </div>
       <div class="statement-examples">
         <span><strong>insula, insulae</strong> · 1.ª</span>
-        <span><strong>fluvius, fluvii</strong> · 2.ª</span>
-        <span><strong>oppidum, oppidi</strong> · 2.ª ⚲</span>
+        <span><strong>dominus, domini</strong> · 2.ª</span>
+        <span><strong>templum, templi</strong> · 2.ª ⚲</span>
         <span><strong>mercator, mercatoris</strong> · 3.ª</span>
       </div>
     </div>`;

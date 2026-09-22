@@ -9,9 +9,9 @@ const declensions = [
     endings:{sg:{NOM:"-a",VOC:"-a",AC:"-am",XEN:"-ae",DAT:"-ae",ABL:"-a"},pl:{NOM:"-ae",VOC:"-ae",AC:"-as",XEN:"-arum",DAT:"-is",ABL:"-is"}}
   },
   {
-    id:"2", name:"2.ª", genders:["M","N"], examples:[["fluvius","M"],["oppidum","N"]],
-    sg:{NOM:"fluvius",VOC:"fluvie",AC:"fluvium",XEN:"fluvii",DAT:"fluvio",ABL:"fluvio"},
-    pl:{NOM:"fluvii",VOC:"fluvii",AC:"fluvios",XEN:"fluviorum",DAT:"fluviis",ABL:"fluviis"},
+    id:"2", name:"2.ª", genders:["M","N"], examples:[["dominus","M"],["templum","N"]],
+    sg:{NOM:"dominus",VOC:"domine",AC:"dominum",XEN:"domini",DAT:"domino",ABL:"domino"},
+    pl:{NOM:"domini",VOC:"domini",AC:"dominos",XEN:"dominorum",DAT:"dominis",ABL:"dominis"},
     endings:{sg:{NOM:"-us",VOC:"-e",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}
   },
   {
@@ -41,11 +41,11 @@ const nominalVariants = {
     {id:"poeta",label:"poeta ♂",word:"poeta",gender:"M",note:"1.ª declinación, masculino",sg:{NOM:"poeta",VOC:"poeta",AC:"poetam",XEN:"poetae",DAT:"poetae",ABL:"poeta"},pl:{NOM:"poetae",VOC:"poetae",AC:"poetas",XEN:"poetarum",DAT:"poetis",ABL:"poetis"},endings:{sg:{NOM:"-a",VOC:"-a",AC:"-am",XEN:"-ae",DAT:"-ae",ABL:"-a"},pl:{NOM:"-ae",VOC:"-ae",AC:"-as",XEN:"-arum",DAT:"-is",ABL:"-is"}}}
   ],
   "2": [
-    {id:"fluvius",label:"-us",word:"fluvius",gender:"M",note:"fluvius / fluvii",sg:{NOM:"fluvius",VOC:"fluvie",AC:"fluvium",XEN:"fluvii",DAT:"fluvio",ABL:"fluvio"},pl:{NOM:"fluvii",VOC:"fluvii",AC:"fluvios",XEN:"fluviorum",DAT:"fluviis",ABL:"fluviis"},endings:{sg:{NOM:"-us",VOC:"-e",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}},
+    {id:"dominus",label:"-us",word:"dominus",gender:"M",note:"dominus / domini",sg:{NOM:"dominus",VOC:"domine",AC:"dominum",XEN:"domini",DAT:"domino",ABL:"domino"},pl:{NOM:"domini",VOC:"domini",AC:"dominos",XEN:"dominorum",DAT:"dominis",ABL:"dominis"},endings:{sg:{NOM:"-us",VOC:"-e",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}},
     {id:"puer",label:"puer",word:"puer",gender:"M",note:"-er non apocopado",sg:{NOM:"puer",VOC:"puer",AC:"puerum",XEN:"pueri",DAT:"puero",ABL:"puero"},pl:{NOM:"pueri",VOC:"pueri",AC:"pueros",XEN:"puerorum",DAT:"pueris",ABL:"pueris"},endings:{sg:{NOM:"variable",VOC:"variable",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}},
     {id:"ager",label:"ager",word:"ager",gender:"M",note:"-er apocopado: agr-",sg:{NOM:"ager",VOC:"ager",AC:"agrum",XEN:"agri",DAT:"agro",ABL:"agro"},pl:{NOM:"agri",VOC:"agri",AC:"agros",XEN:"agrorum",DAT:"agris",ABL:"agris"},endings:{sg:{NOM:"variable",VOC:"variable",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}},
     {id:"vir",label:"vir",word:"vir",gender:"M",note:"modelo en -ir",sg:{NOM:"vir",VOC:"vir",AC:"virum",XEN:"viri",DAT:"viro",ABL:"viro"},pl:{NOM:"viri",VOC:"viri",AC:"viros",XEN:"virorum",DAT:"viris",ABL:"viris"},endings:{sg:{NOM:"variable",VOC:"variable",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-i",VOC:"-i",AC:"-os",XEN:"-orum",DAT:"-is",ABL:"-is"}}},
-    {id:"oppidum",label:"neutro",word:"oppidum",gender:"N",note:"oppidum / oppida",sg:{NOM:"oppidum",VOC:"oppidum",AC:"oppidum",XEN:"oppidi",DAT:"oppido",ABL:"oppido"},pl:{NOM:"oppida",VOC:"oppida",AC:"oppida",XEN:"oppidorum",DAT:"oppidis",ABL:"oppidis"},endings:{sg:{NOM:"-um",VOC:"-um",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-a",VOC:"-a",AC:"-a",XEN:"-orum",DAT:"-is",ABL:"-is"}}}
+    {id:"templum",label:"neutro",word:"templum",gender:"N",note:"templum / templi",sg:{NOM:"templum",VOC:"templum",AC:"templum",XEN:"templi",DAT:"templo",ABL:"templo"},pl:{NOM:"templa",VOC:"templa",AC:"templa",XEN:"templorum",DAT:"templis",ABL:"templis"},endings:{sg:{NOM:"-um",VOC:"-um",AC:"-um",XEN:"-i",DAT:"-o",ABL:"-o"},pl:{NOM:"-a",VOC:"-a",AC:"-a",XEN:"-orum",DAT:"-is",ABL:"-is"}}}
   ],
   "3": [
     {id:"mercator",label:"M/F imp.",word:"mercator",gender:"M",note:"imparisílabo: mercator / mercatoris",sg:{NOM:"mercator",VOC:"mercator",AC:"mercatorem",XEN:"mercatoris",DAT:"mercatori",ABL:"mercatore"},pl:{NOM:"mercatores",VOC:"mercatores",AC:"mercatores",XEN:"mercatorum",DAT:"mercatoribus",ABL:"mercatoribus"},endings:{sg:{NOM:"variable",VOC:"variable",AC:"-em",XEN:"-is",DAT:"-i",ABL:"-e"},pl:{NOM:"-es",VOC:"-es",AC:"-es",XEN:"-um",DAT:"-ibus",ABL:"-ibus"}}},
