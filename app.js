@@ -12,6 +12,7 @@ let state = {
   gender:"all",
   agreement:3,
   agreementCase:"NOM",
+  agreementNumber:"sg",
   adjectiveFamily:"us",
   adjective:"bonus",
   predicate:0,
@@ -596,11 +597,13 @@ function renderAgreement(){
   }
   const example = agreementExamples[state.agreement];
   const c = state.agreementCase;
-  const forms = example.words[c];
-  const endings = example.endings[c];
-  const traits = `${c} · ${example.traits}`;
   const genderCode = example.traits.split(" · ")[1];
-  const traitMarkup = `${c} · ${example.traits.split(" · ")[0]} · ${genderMark(genderCode)}`;
+  const agreementForm = state.agreementNumber === "pl" ? latinAgreementPlural(example,c,genderCode) : {forms:example.words[c],endings:example.endings[c]};
+  const forms = agreementForm.forms;
+  const endings = agreementForm.endings;
+  const numberLabel = state.agreementNumber.toUpperCase();
+  const traits = `${c} · ${numberLabel} · ${genderCode}`;
+  const traitMarkup = `${c} · ${numberLabel} · ${genderMark(genderCode)}`;
   $("#title").textContent = "Concordan polos trazos, non pola superficie";
   $("#lede").textContent = "O sinal compartido baixa aos trazos gramaticais. As terminacións quedan visibles, pero non son a conexión principal.";
   $("#conceptFact").textContent = "Concordancia";
@@ -624,11 +627,15 @@ function renderAgreement(){
       </div>
       <div class="trait-band">
         <span class="trait-chip">CASO ${c}</span>
-        <span class="trait-chip">${example.traits.split(" · ")[0]}</span>
+        <span class="trait-chip">${numberLabel}</span>
         <span class="trait-chip">${genderMark(genderCode,true)}</span>
       </div>
       <div class="case-actions">
         ${["NOM","AC","XEN","DAT","ABL"].map(k => `<button class="${k===c?"active":""}" data-agreement-case="${k}">${k}</button>`).join("")}
+      </div>
+      <div class="number-actions" aria-label="Número">
+        <button class="${state.agreementNumber==="sg"?"active":""}" data-agreement-number="sg">SG</button>
+        <button class="${state.agreementNumber==="pl"?"active":""}" data-agreement-number="pl">PL</button>
       </div>
     </div>
   `;
@@ -636,6 +643,30 @@ function renderAgreement(){
     state.agreementCase = button.dataset.agreementCase;
     renderAgreement();
   });
+  document.querySelectorAll("[data-agreement-number]").forEach(button => button.onclick = () => {
+    state.agreementNumber = button.dataset.agreementNumber;
+    renderAgreement();
+  });
+}
+
+function latinAgreementPlural(example,grammaticalCase,gender){
+  const nounGenitive=example.words.XEN[0];
+  const nounMeta=example.meta[0];
+  let nounStem; let nounEndings;
+  if(nounMeta.startsWith("1.ª")){
+    nounStem=nounGenitive.slice(0,-2);
+    nounEndings={NOM:"ae",AC:"as",XEN:"arum",DAT:"is",ABL:"is"};
+  }else if(nounMeta.startsWith("2.ª")){
+    nounStem=nounGenitive.slice(0,-1);
+    nounEndings=gender==="N"?{NOM:"a",AC:"a",XEN:"orum",DAT:"is",ABL:"is"}:{NOM:"i",AC:"os",XEN:"orum",DAT:"is",ABL:"is"};
+  }else{
+    nounStem=nounGenitive.slice(0,-2);
+    nounEndings=gender==="N"?{NOM:"a",AC:"a",XEN:"um",DAT:"ibus",ABL:"ibus"}:{NOM:"es",AC:"es",XEN:"um",DAT:"ibus",ABL:"ibus"};
+  }
+  const adjectiveGenitive=example.words.XEN[1];
+  const adjectiveStem=gender==="F"?adjectiveGenitive.slice(0,-2):adjectiveGenitive.slice(0,-1);
+  const adjectiveEndings=gender==="F"?{NOM:"ae",AC:"as",XEN:"arum",DAT:"is",ABL:"is"}:gender==="N"?{NOM:"a",AC:"a",XEN:"orum",DAT:"is",ABL:"is"}:{NOM:"i",AC:"os",XEN:"orum",DAT:"is",ABL:"is"};
+  return {forms:[nounStem+nounEndings[grammaticalCase],adjectiveStem+adjectiveEndings[grammaticalCase]],endings:[`-${nounEndings[grammaticalCase]}`,`-${adjectiveEndings[grammaticalCase]}`]};
 }
 
 function renderGreekAgreement(){
@@ -694,9 +725,12 @@ function renderGreekAgreement(){
   }
   const example=greekAgreementExamples[state.agreement] || greekAgreementExamples[0];
   $("#title").textContent="As palabras concordan en trazos"; $("#lede").textContent="Cambia o caso e observa como substantivo e adxectivo responden xuntos."; $("#conceptFact").textContent="Concordancia nominal"; $("#focusFact").textContent=`${greekGrammar.caseNames[state.case]} · ${example.traits}`; $("#signalFact").textContent="Concordar significa compartir caso, número e xénero, non acabar necesariamente igual.";
-  const words=example.words[state.case]; const endings=example.endings[state.case];
-  $("#agreementView").innerHTML=`<div class="agreement-stage ${genderInfo[example.gender].className}"><div class="phrase">${words.map((word,index)=>`<div class="token"><div class="latin-word">${endingMarkup(word,endings[index])}</div><div class="meta"><span>${example.meta[index]}</span></div></div>`).join("")}</div><div class="trait-band"><span class="trait-chip">${state.case} · ${example.traits}</span></div><div class="case-actions">${greekGrammar.cases.map(grammaticalCase=>`<button class="${grammaticalCase===state.case?"active":""}" data-greek-agreement-case="${grammaticalCase}">${grammaticalCase}</button>`).join("")}</div></div>`;
+  const greekForms=state.agreementNumber==="pl"?greekAgreementPlurals[example.id]:example;
+  const words=greekForms.words[state.case]; const endings=greekForms.endings[state.case]; const numberLabel=state.agreementNumber.toUpperCase();
+  $("#focusFact").textContent=`${greekGrammar.caseNames[state.case]} · ${numberLabel} · ${example.gender}`;
+  $("#agreementView").innerHTML=`<div class="agreement-stage ${genderInfo[example.gender].className}"><div class="phrase">${words.map((word,index)=>`<div class="token"><div class="latin-word">${endingMarkup(word,endings[index])}</div><div class="meta"><span>${example.meta[index]}</span></div></div>`).join("")}</div><div class="trait-band"><span class="trait-chip">${state.case} · ${numberLabel} · ${genderMark(example.gender)}</span></div><div class="case-actions">${greekGrammar.cases.map(grammaticalCase=>`<button class="${grammaticalCase===state.case?"active":""}" data-greek-agreement-case="${grammaticalCase}">${grammaticalCase}</button>`).join("")}</div><div class="number-actions" aria-label="Número"><button class="${state.agreementNumber==="sg"?"active":""}" data-greek-agreement-number="sg">SG</button><button class="${state.agreementNumber==="pl"?"active":""}" data-greek-agreement-number="pl">PL</button></div></div>`;
   document.querySelectorAll("[data-greek-agreement-case]").forEach(button=>button.onclick=()=>{state.case=button.dataset.greekAgreementCase;renderGreekAgreement();});
+  document.querySelectorAll("[data-greek-agreement-number]").forEach(button=>button.onclick=()=>{state.agreementNumber=button.dataset.greekAgreementNumber;renderGreekAgreement();});
 }
 
 function renderAmbiguity(){

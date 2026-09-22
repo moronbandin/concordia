@@ -170,12 +170,14 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
   font-family:Inter,system-ui,sans-serif;margin-top:8px;color:var(--muted);font-size:12px;
   display:grid;gap:3px
 }
-.case-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
-.case-actions button,.mini-button{
+.case-actions,.number-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.number-actions{margin-top:-10px}
+.case-actions button,.number-actions button,.mini-button{
   border:1px solid var(--line);background:#fffefb;border-radius:8px;padding:8px 10px;
   cursor:pointer;color:#4f493f;font-size:12px
 }
-.case-actions button.active,.mini-button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.case-actions button.active,.number-actions button.active,.mini-button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.number-actions button{min-width:54px;border:1px solid var(--line);background:rgba(255,255,255,.72);border-radius:8px;padding:7px 12px;cursor:pointer;color:#4f493f;font-size:11px;font-weight:800}
 .rail{display:grid;gap:12px;align-content:start}
 .inspector{
   border:1px solid rgba(255,255,255,.68);border-radius:12px;background:rgba(255,255,255,.48);box-shadow:var(--shadow);backdrop-filter:blur(24px) saturate(140%);
