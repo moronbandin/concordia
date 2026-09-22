@@ -19,9 +19,9 @@ let state = {
 };
 
 const greekSectionConfig = {
-  nominal:{crumb:"Formas · Flexión nominal grega",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por caso","Por xénero"],kind:"nominal"},
+  nominal:{crumb:"Formas · Flexión nominal grega",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por xénero"],kind:"nominal"},
   statements:{crumb:"Formas · Enunciados gregos",tabs:["Substantivos","Adxectivos","Pronomes e determinantes","Verbos"],kind:"statements"},
-  agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"}
+  agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Artigo e posición","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"}
 };
 
 function currentConfig(){
@@ -122,7 +122,7 @@ function renderSubnav(){
     button.onclick = () => {
       state.tab = button.dataset.tab;
       if(state.section === "nominal"){
-        state.mode = state.tab === "Por xénero" ? "gender" : state.tab === "Por caso" ? "case" : "paradigm";
+        state.mode = state.tab === "Por xénero" ? "gender" : "paradigm";
       }
       if(state.section === "agreement"){
         const preferred = {
@@ -148,7 +148,7 @@ function renderModeControls(){
       state.mode = button.dataset.mode;
       render();
     });
-  } else if(state.section === "agreement" && !["Suxeito · atributo","Xénero","Número","Neutro"].includes(state.tab)){
+  } else if(state.section === "agreement" && !["Artigo e posición","Suxeito · atributo","Xénero","Número","Neutro"].includes(state.tab)){
     box.classList.remove("hidden");
     const examples = state.language === "greek" ? greekAgreementExamples : agreementExamples;
     box.innerHTML = `<label class="example-select-label">Exemplo <select id="agreementSelect">${examples.map((example,index) => `<option value="${index}" ${index===state.agreement?"selected":""}>${example.label}</option>`).join("")}</select></label>`;
@@ -318,7 +318,13 @@ function renderStatements(){
       <div class="statement-rule">
         <span>NOMINATIVO SINGULAR</span><strong>+</strong><span>XENITIVO SINGULAR</span>
       </div>
-      <p class="lesson-intro">O enunciado é a forma base coa que identificamos unha palabra e distinguimos a súa declinación.</p>
+      <div class="statement-examples enunciation-primary">
+        <span><strong>insula, insulae</strong><small>1.ª declinación</small></span>
+        <span><strong>dominus, domini</strong><small>2.ª declinación ♂</small></span>
+        <span><strong>templum, templi</strong><small>2.ª declinación ⚲</small></span>
+        <span><strong>mercator, mercatoris</strong><small>3.ª declinación</small></span>
+      </div>
+      <p class="enunciation-note">O enunciado é a forma base coa que identificamos unha palabra e distinguimos a súa declinación.</p>
       <div class="ambiguity-question">
         <span>Se atopamos</span>
         <strong>templa</strong>
@@ -335,12 +341,6 @@ function renderStatements(){
           <strong>templum, -i</strong>
           <span>templa é nominativo, vocativo ou acusativo plural neutro da 2.ª declinación.</span>
         </article>
-      </div>
-      <div class="statement-examples">
-        <span><strong>insula, insulae</strong> · 1.ª</span>
-        <span><strong>dominus, domini</strong> · 2.ª</span>
-        <span><strong>templum, templi</strong> · 2.ª ⚲</span>
-        <span><strong>mercator, mercatoris</strong> · 3.ª</span>
       </div>
     </div>`;
 }
@@ -359,20 +359,20 @@ function renderGreekStatements(){
   $("#statementsView").innerHTML = `
     <div class="statement-demo greek-statement">
       <div class="statement-rule"><span>NOMINATIVO SINGULAR</span><strong>+</strong><span>XENITIVO SINGULAR</span><strong>+</strong><span>ARTIGO</span></div>
-      <p class="lesson-intro">O enunciado é a forma base coa que identificamos un substantivo. Non é unha tradución: contén a información necesaria para saber como se declina e de que xénero é.</p>
+      <div class="statement-examples greek-examples enunciation-primary">
+        <span><strong>χώρα, χώρας, ἡ</strong><small>1.ª declinación ♀</small></span>
+        <span><strong>λόγος, λόγου, ὁ</strong><small>2.ª declinación ♂</small></span>
+        <span><strong>δῶρον, δώρου, τό</strong><small>2.ª declinación ⚲</small></span>
+        <span><strong>φύλαξ, φύλακος, ὁ</strong><small>3.ª declinación ♂</small></span>
+        <span><strong>πόλις, πόλεως, ἡ</strong><small>3.ª declinación ♀</small></span>
+        <span><strong>σῶμα, σώματος, τό</strong><small>3.ª declinación ⚲</small></span>
+      </div>
+      <p class="enunciation-note">O enunciado é a forma base coa que identificamos un substantivo. Non é unha tradución: contén a información necesaria para saber como se declina e de que xénero é.</p>
       <div class="greek-enunciation-focus"><span>Non abonda con ver</span><strong>σῶμα</strong><span>O enunciado completo é</span><b>σῶμα, σώματος, τό</b></div>
       <div class="statement-paths three-paths">
         <article class="statement-path"><span class="path-label">NOM SG</span><strong>σῶμα</strong><span>forma pola que comeza o enunciado</span></article>
         <article class="statement-path"><span class="path-label">XEN SG</span><strong>σώματος</strong><span>revela o tema σωματ- e a 3.ª declinación</span></article>
         <article class="statement-path neuter"><span class="path-label">ARTIGO</span><strong>τό</strong><span>indica que o substantivo é neutro</span></article>
-      </div>
-      <div class="statement-examples greek-examples">
-        <span><strong>χώρα, χώρας, ἡ</strong> · 1.ª ♀</span>
-        <span><strong>λόγος, λόγου, ὁ</strong> · 2.ª ♂</span>
-        <span><strong>δῶρον, δώρου, τό</strong> · 2.ª ⚲</span>
-        <span><strong>φύλαξ, φύλακος, ὁ</strong> · 3.ª ♂</span>
-        <span><strong>πόλις, πόλεως, ἡ</strong> · 3.ª ♀</span>
-        <span><strong>σῶμα, σώματος, τό</strong> · 3.ª ⚲</span>
       </div>
     </div>`;
 }
@@ -439,7 +439,7 @@ function renderInflectedEnunciations(language){
   $("#conceptFact").textContent=`Enunciado · ${state.tab.toLowerCase()}`;
   $("#focusFact").textContent=content.focus;
   $("#signalFact").textContent=content.signal;
-  $("#statementsView").innerHTML=`<div class="statement-demo ${isGreek?"greek-statement":""}"><div class="statement-rule enunciation-rule">${content.rule.map(item=>item==="+"?"<strong>+</strong>":`<span>${item}</span>`).join("")}</div><p class="lesson-intro">${content.lede}</p><div class="statement-paths three-paths">${content.cards.map(([label,form,text])=>`<article class="statement-path"><span class="path-label">${label}</span><strong>${form}</strong><span>${text}</span></article>`).join("")}</div><div class="statement-examples enunciation-examples">${content.examples.map(example=>`<span><strong>${example}</strong></span>`).join("")}</div></div>`;
+  $("#statementsView").innerHTML=`<div class="statement-demo ${isGreek?"greek-statement":""}"><div class="statement-rule enunciation-rule">${content.rule.map(item=>item==="+"?"<strong>+</strong>":`<span>${item}</span>`).join("")}</div><div class="statement-paths three-paths enunciation-primary-cards">${content.cards.map(([label,form,text])=>`<article class="statement-path"><span class="path-label">${label}</span><strong>${form}</strong><span>${text}</span></article>`).join("")}</div><p class="enunciation-note">${content.lede}</p><div class="statement-examples enunciation-examples">${content.examples.map(example=>`<span><strong>${example}</strong></span>`).join("")}</div></div>`;
 }
 
 function renderAdjectives(){
@@ -640,6 +640,27 @@ function renderAgreement(){
 
 function renderGreekAgreement(){
   setVisible("agreementView");
+  if(state.tab === "Artigo e posición"){
+    $("#title").textContent = "O artigo delimita a relación atributiva";
+    $("#lede").textContent = "A posición do adxectivo con respecto ao grupo formado polo artigo e o substantivo cambia a relación sintáctica.";
+    $("#conceptFact").textContent = "Artigo e posición";
+    $("#focusFact").textContent = "Atributiva ↔ predicativa";
+    $("#signalFact").textContent = "Na posición atributiva o adxectivo queda dentro do grupo do artigo; na predicativa queda fóra.";
+    $("#agreementView").innerHTML = `<div class="article-position-lab">
+      <section class="position-group attributive-position">
+        <header><span>POSICIÓN ATRIBUTIVA</span><strong>o home bo</strong></header>
+        <article><div class="greek-position-phrase"><mark>ὁ ἀγαθὸς ἄνθρωπος</mark></div><p>O artigo abre un único grupo que inclúe adxectivo e substantivo.</p></article>
+        <article><div class="greek-position-phrase"><mark>ὁ ἄνθρωπος</mark> <mark>ὁ ἀγαθός</mark></div><p>Na segunda posición atributiva, o artigo repítese diante do adxectivo.</p></article>
+      </section>
+      <div class="position-divider"><span>ATRIBUTO</span><b>≠</b><span>PREDICADO</span></div>
+      <section class="position-group predicative-position">
+        <header><span>POSICIÓN PREDICATIVA</span><strong>o home é bo</strong></header>
+        <article><div class="greek-position-phrase"><em>ἀγαθός</em> <mark>ὁ ἄνθρωπος</mark></div><p>O adxectivo queda fóra do grupo artigo + substantivo e funciona como predicado.</p></article>
+        <article><div class="greek-position-phrase"><mark>ὁ ἄνθρωπος</mark> <em>ἀγαθός</em></div><p>A orde inversa conserva a mesma relación predicativa.</p></article>
+      </section>
+    </div>`;
+    return;
+  }
   if(state.tab === "Suxeito · atributo"){
     const example = greekPredicateExamples[state.predicate % greekPredicateExamples.length];
     const marked = example.sentence.replace(example.subject,`<span class="syntax-subject">${example.subject}</span>`).replace(example.attribute,`<span class="syntax-attribute">${example.attribute}</span>`);

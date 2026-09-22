@@ -233,6 +233,13 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
 .path-label{font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .statement-examples{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
 .statement-examples span{background:rgba(255,255,255,.68);padding:12px 14px;font-size:13px}
+.enunciation-primary{border:1px solid rgba(255,255,255,.72);border-radius:10px;overflow:hidden}
+.enunciation-primary span{display:grid;gap:5px;padding:16px}
+.enunciation-primary strong{font-family:"New York",Georgia,serif;font-size:23px;font-weight:550}
+.enunciation-primary small{font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.enunciation-primary-cards .statement-path{background:rgba(255,255,255,.56);box-shadow:inset 0 1px rgba(255,255,255,.7)}
+.enunciation-primary-cards .statement-path strong{font-size:25px;line-height:1.2}
+.enunciation-note{margin:0;padding:10px 2px;color:var(--muted);font-size:12px;line-height:1.5;border-top:1px solid var(--line)}
 .greek-enunciation-focus{display:grid;justify-items:center;gap:7px;padding:22px 16px;text-align:center;background:rgba(255,255,255,.38);border-block:1px solid var(--line);color:var(--muted);font-size:12px}
 .greek-enunciation-focus strong{font-size:54px;line-height:1;color:var(--ink)}
 .greek-enunciation-focus b{font-size:24px;color:var(--ink);font-weight:650}
@@ -243,6 +250,15 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
 .neuter-lab article strong{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif;font-size:34px}
 .neuter-sentence{grid-column:1/-1;min-height:150px;display:grid;place-items:center;align-content:center;gap:8px;text-align:center;border-top:1px solid var(--line);font-family:"Palatino Linotype",Palatino,"Times New Roman",serif;font-size:34px}
 .neuter-sentence mark{background:rgba(235,148,47,.13);color:inherit;padding:2px 5px;border-radius:4px}.neuter-sentence b{color:var(--terra)}.neuter-sentence small{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;font-size:11px;color:var(--muted)}
+.article-position-lab{max-width:980px;margin:4px auto;display:grid;grid-template-columns:1fr 74px 1fr;gap:14px;align-items:stretch}
+.position-group{display:grid;gap:10px;align-content:start}
+.position-group header{display:grid;gap:4px;padding:4px 2px 8px}.position-group header span{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--muted)}.position-group header strong{font-size:13px}
+.position-group article{min-height:148px;display:grid;align-content:center;gap:16px;padding:18px;border:1px solid rgba(255,255,255,.74);border-radius:10px;background:rgba(255,255,255,.48)}
+.position-group article p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.greek-position-phrase{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif;font-size:29px;line-height:1.35;white-space:nowrap}
+.greek-position-phrase mark{color:inherit;background:rgba(22,119,255,.08);border-bottom:2px solid rgba(22,119,255,.28);padding:3px 5px;border-radius:4px}
+.greek-position-phrase em{font-style:normal;color:var(--terra);background:rgba(191,82,54,.07);border-bottom:2px solid rgba(191,82,54,.28);padding:3px 5px;border-radius:4px}
+.position-divider{display:grid;place-items:center;align-content:center;gap:10px;color:var(--muted)}.position-divider span{font-size:8px;font-weight:800;letter-spacing:.08em;writing-mode:vertical-rl}.position-divider b{font-size:22px;color:var(--ink)}
 .adjective-explorer{display:grid;gap:14px}
 .adjective-picker{display:flex;gap:5px;flex-wrap:wrap}
 .adjective-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:4px}
@@ -374,6 +390,7 @@ body.classroom .subnav button,body.classroom .segmented button{font-size:14px;pa
   .statement-row{grid-template-columns:1fr;gap:5px}
   .statement-paths,.statement-paths.three-paths,.statement-examples,.greek-examples{grid-template-columns:1fr}
   .neuter-lab{grid-template-columns:1fr}.neuter-sentence{grid-column:auto}
+  .article-position-lab{grid-template-columns:1fr}.position-divider{display:flex;justify-content:center}.position-divider span{writing-mode:initial}.greek-position-phrase{white-space:normal}
   .example-browser,.gender-contrast,.number-pairs{grid-template-columns:1fr}
   .pronoun-dashboard,.personal-grid,.possessive-grid{grid-template-columns:1fr}
   body{overflow:auto}

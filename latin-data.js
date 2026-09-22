@@ -153,7 +153,7 @@ const predicateExamples = [
 ];
 
 const sectionConfig = {
-  nominal:{crumb:"Formas · Flexión nominal",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por caso","Por xénero"],kind:"nominal"},
+  nominal:{crumb:"Formas · Flexión nominal",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por xénero"],kind:"nominal"},
   statements:{crumb:"Formas · Enunciados",tabs:["Substantivos","Adxectivos","Pronomes e determinantes","Verbos"],kind:"statements"},
   agreement:{crumb:"Formas · Concordancia",tabs:["Nominal","Suxeito · atributo","Xénero","Número","Caso"],kind:"agreement"},
   adjectives:{crumb:"Formas · Adxectivos",tabs:["Visión xeral","-us · -a · -um","-er · -era · -erum","-is · -e","-ns · -ntis"],kind:"adjectives"},
