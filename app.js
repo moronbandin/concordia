@@ -15,6 +15,7 @@ let state = {
   agreementNumber:"sg",
   adjectiveFamily:"us",
   adjective:"bonus",
+  greekAdjective:"agathos",
   predicate:0,
   ambiguity:"bare"
 };
@@ -22,7 +23,9 @@ let state = {
 const greekSectionConfig = {
   nominal:{crumb:"Formas · Flexión nominal grega",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por xénero"],kind:"nominal"},
   statements:{crumb:"Formas · Enunciados gregos",tabs:["Substantivos","Adxectivos","Pronomes e determinantes","Verbos"],kind:"statements"},
-  agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Artigo e posición","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"}
+  agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Artigo e posición","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"},
+  adjectives:{crumb:"Formas · Adxectivos gregos",tabs:["Visión xeral","-ος · -η · -ον","-ος · -α · -ον","Dúas terminacións"],kind:"adjectives"},
+  pronouns:{crumb:"Formas · Flexión pronominal grega",tabs:["Visión xeral","Artigo","ὅδε · ἥδε · τόδε","Persoais"],kind:"pronouns"}
 };
 
 function currentConfig(){
@@ -444,6 +447,10 @@ function renderInflectedEnunciations(language){
 }
 
 function renderAdjectives(){
+  if(state.language === "greek"){
+    renderGreekAdjectives();
+    return;
+  }
   setVisible("adjectivesView");
   const overview = [
     {title:"Tres terminacións",form:"bonus · bona · bonum",text:"Modelo 2-1-2: masculino e neutro seguen a 2.ª; o feminino segue a 1.ª.",tag:"nivel inicial"},
@@ -500,6 +507,35 @@ function renderAdjectives(){
   });
 }
 
+function greekAdjectiveEnding(form,gender,number,grammaticalCase){
+  const lengths={M:{sg:{NOM:2,VOC:1,AC:2,XEN:2,DAT:1},pl:{NOM:2,VOC:2,AC:3,XEN:2,DAT:3}},F:{sg:{NOM:1,VOC:1,AC:2,XEN:2,DAT:1},pl:{NOM:2,VOC:2,AC:2,XEN:2,DAT:3}},N:{sg:{NOM:2,VOC:2,AC:2,XEN:2,DAT:1},pl:{NOM:1,VOC:1,AC:1,XEN:2,DAT:3}}};
+  return form.slice(-lengths[gender][number][grammaticalCase]);
+}
+
+function renderGreekAdjectives(){
+  setVisible("adjectivesView");
+  $("#conceptFact").textContent="Adxectivos gregos";
+  $("#focusFact").textContent=state.tab;
+  $("#signalFact").textContent="O adxectivo comparte caso, número e xénero co substantivo.";
+  if(state.tab==="Visión xeral"){
+    $("#title").textContent="Modelos da flexión adxectiva grega";
+    $("#lede").textContent="O número de terminacións indica como se distribúen as formas de nominativo entre os tres xéneros.";
+    const models=[["Tres terminacións","ἀγαθός · ἀγαθή · ἀγαθόν","Masculino e neutro seguen a 2.ª declinación; o feminino segue a 1.ª."],["Tres terminacións en -α","μικρός · μικρά · μικρόν","O feminino presenta α tras ρ, ε ou ι."],["Dúas terminacións","ἀθάνατος · ἀθάνατον","Masculino e feminino comparten unha forma; o neutro presenta outra."]];
+    $("#adjectivesView").innerHTML=`<div class="lesson"><div class="lesson-grid">${models.map(([title,form,text])=>`<article class="lesson-panel active"><h3>${title}</h3><div class="lesson-form greek-form">${form}</div><p>${text}</p></article>`).join("")}</div></div>`;
+    return;
+  }
+  const familyKey=state.tab.startsWith("-ος · -η")?"eta":state.tab.startsWith("-ος · -α")?"alpha":"two";
+  const family=greekAdjectiveFamilies[familyKey];
+  if(!family.some(item=>item.id===state.greekAdjective)) state.greekAdjective=family[0].id;
+  const adjective=family.find(item=>item.id===state.greekAdjective);
+  $("#title").textContent=adjective.enunciation;
+  $("#lede").textContent="Paradigma completo nos tres xéneros, nos cinco casos e nos dous números.";
+  $("#focusFact").textContent=adjective.label;
+  $("#adjectivesView").innerHTML=`<div class="adjective-explorer greek-adjective-explorer"><div class="adjective-picker">${family.map(item=>`<button class="variant-button ${item.id===adjective.id?"active":""}" data-greek-adjective="${item.id}">${item.enunciation}</button>`).join("")}</div><div class="adjective-heading"><div><strong>${adjective.enunciation}</strong><span>${adjective.label}</span></div><span class="lesson-tag">paradigma completo</span></div><div class="adjective-table-wrap"><table class="adjective-table"><thead><tr><th rowspan="2">Caso</th><th colspan="2" class="gender-head masculine">${genderMark("M",true)}</th><th colspan="2" class="gender-head feminine">${genderMark("F",true)}</th><th colspan="2" class="gender-head neuter">${genderMark("N",true)}</th></tr><tr><th>SG</th><th>PL</th><th>SG</th><th>PL</th><th>SG</th><th>PL</th></tr></thead><tbody>${greekGrammar.cases.map(grammaticalCase=>`<tr class="${grammaticalCase===state.case?"active":""}" data-greek-adjective-case="${grammaticalCase}"><th>${grammaticalCase}</th>${["M","F","N"].map(gender=>{const endingGender=familyKey==="two"&&gender==="F"?"M":gender;return `<td class="gender-cell ${genderInfo[gender].className}">${endingMarkup(adjective[gender].sg[grammaticalCase],greekAdjectiveEnding(adjective[gender].sg[grammaticalCase],endingGender,"sg",grammaticalCase))}</td><td class="gender-cell ${genderInfo[gender].className}">${endingMarkup(adjective[gender].pl[grammaticalCase],greekAdjectiveEnding(adjective[gender].pl[grammaticalCase],endingGender,"pl",grammaticalCase))}</td>`;}).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  document.querySelectorAll("[data-greek-adjective]").forEach(button=>button.onclick=()=>{state.greekAdjective=button.dataset.greekAdjective;renderGreekAdjectives();});
+  document.querySelectorAll("[data-greek-adjective-case]").forEach(row=>row.onclick=()=>{state.case=row.dataset.greekAdjectiveCase;renderGreekAdjectives();});
+}
+
 function pronounTable(paradigm){
   return `<div class="adjective-table-wrap pronoun-table-wrap"><table class="adjective-table pronoun-table">
     <thead><tr><th rowspan="2">Caso</th><th colspan="3">Singular</th><th colspan="3">Plural</th></tr>
@@ -509,6 +545,10 @@ function pronounTable(paradigm){
 }
 
 function renderPronouns(){
+  if(state.language === "greek"){
+    renderGreekPronouns();
+    return;
+  }
   setVisible("pronounsView");
   $("#conceptFact").textContent = "Pronomes";
   $("#focusFact").textContent = state.tab;
@@ -541,6 +581,34 @@ function renderPronouns(){
   $("#title").textContent = paradigm.label;
   $("#lede").textContent = paradigm.kind;
   $("#pronounsView").innerHTML = `<div class="pronoun-detail"><div class="pronoun-model"><strong>Formas relacionadas</strong><span>${paradigm.model}</span></div>${pronounTable(paradigm)}</div>`;
+}
+
+function greekPronounTable(paradigm){
+  return `<div class="adjective-table-wrap pronoun-table-wrap"><table class="adjective-table pronoun-table"><thead><tr><th rowspan="2">Caso</th><th colspan="3">Singular</th><th colspan="3">Plural</th></tr><tr>${["M","F","N","M","F","N"].map(gender=>`<th class="gender-head ${genderInfo[gender].className}">${genderMark(gender)}</th>`).join("")}</tr></thead><tbody>${greekPronounCases.map(grammaticalCase=>`<tr><th>${grammaticalCase}</th>${paradigm.sg[grammaticalCase].map((form,index)=>`<td class="gender-cell ${genderInfo[["M","F","N"][index]].className}">${form}</td>`).join("")}${paradigm.pl[grammaticalCase].map((form,index)=>`<td class="gender-cell ${genderInfo[["M","F","N"][index]].className}">${form}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
+function renderGreekPronouns(){
+  setVisible("pronounsView");
+  $("#conceptFact").textContent="Flexión pronominal grega";
+  $("#focusFact").textContent=state.tab;
+  $("#signalFact").textContent="Artigo e pronomes codifican caso, número e xénero con paradigmas propios.";
+  if(state.tab==="Visión xeral"){
+    $("#title").textContent="Mapa da flexión pronominal grega";
+    $("#lede").textContent="Abre cada paradigma para comparar singular, plural e os tres xéneros.";
+    $("#pronounsView").innerHTML=`<div class="pronoun-dashboard"><button class="pronoun-summary" data-greek-pronoun-tab="Artigo"><span>artigo</span><strong>ὁ · ἡ · τό</strong><small>τοῦ · τῷ · τόν</small></button><button class="pronoun-summary" data-greek-pronoun-tab="ὅδε · ἥδε · τόδε"><span>demostrativo</span><strong>ὅδε · ἥδε · τόδε</strong><small>τοῦδε · τῷδε</small></button><button class="pronoun-summary" data-greek-pronoun-tab="Persoais"><span>persoais</span><strong>ἐγώ · σύ</strong><small>ἡμεῖς · ὑμεῖς</small></button></div>`;
+    document.querySelectorAll("[data-greek-pronoun-tab]").forEach(button=>button.onclick=()=>{state.tab=button.dataset.greekPronounTab;render();});
+    return;
+  }
+  if(state.tab==="Persoais"){
+    $("#title").textContent="Pronomes persoais";
+    $("#lede").textContent="As formas tónicas e átonas aparecen xuntas cando existen variantes.";
+    $("#pronounsView").innerHTML=`<div class="personal-grid">${Object.values(greekPersonalPronouns).map(item=>`<article class="personal-panel"><h3>${item.label}</h3><div class="personal-table"><div><strong>Caso</strong><strong>SG</strong><strong>PL</strong></div>${greekPronounCases.map(grammaticalCase=>`<div><span>${grammaticalCase}</span><b>${item.sg[grammaticalCase]}</b><b>${item.pl[grammaticalCase]}</b></div>`).join("")}</div></article>`).join("")}</div>`;
+    return;
+  }
+  const paradigm=state.tab==="Artigo"?greekPronouns.article:greekPronouns.hode;
+  $("#title").textContent=paradigm.label;
+  $("#lede").textContent=paradigm.note;
+  $("#pronounsView").innerHTML=`<div class="pronoun-detail"><div class="pronoun-model"><strong>${paradigm.kind}</strong><span>${paradigm.note}</span></div>${greekPronounTable(paradigm)}</div>`;
 }
 
 function renderAgreement(){

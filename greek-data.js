@@ -48,3 +48,29 @@ const greekPredicateExamples = [
   {sentence:"Ὀρθή ἥδε ἡ ψυχή.",subject:"ἥδε ἡ ψυχή",attribute:"Ὀρθή",traits:"NOM · SG · ♀ · cópula elidida"},
   {sentence:"Ὁ ἄνθρωπος ζῷον πολιτικόν.",subject:"Ὁ ἄνθρωπος",attribute:"ζῷον πολιτικόν",traits:"NOM · SG · ⚲ · cópula elidida"}
 ];
+
+function buildGreek212(id,label,stem,feminine){
+  const feminineAlpha=feminine==="α";
+  return {id,label,enunciation:`${stem}ός, ${stem}${feminineAlpha?"ά":"ή"}, ${stem}όν`,
+    M:{sg:{NOM:stem+"ός",VOC:stem+"έ",AC:stem+"όν",XEN:stem+"οῦ",DAT:stem+"ῷ"},pl:{NOM:stem+"οί",VOC:stem+"οί",AC:stem+"ούς",XEN:stem+"ῶν",DAT:stem+"οῖς"}},
+    F:{sg:{NOM:stem+(feminineAlpha?"ά":"ή"),VOC:stem+(feminineAlpha?"ά":"ή"),AC:stem+(feminineAlpha?"άν":"ήν"),XEN:stem+(feminineAlpha?"ᾶς":"ῆς"),DAT:stem+(feminineAlpha?"ᾷ":"ῇ")},pl:{NOM:stem+"αί",VOC:stem+"αί",AC:stem+"άς",XEN:stem+"ῶν",DAT:stem+"αῖς"}},
+    N:{sg:{NOM:stem+"όν",VOC:stem+"όν",AC:stem+"όν",XEN:stem+"οῦ",DAT:stem+"ῷ"},pl:{NOM:stem+"ά",VOC:stem+"ά",AC:stem+"ά",XEN:stem+"ῶν",DAT:stem+"οῖς"}}
+  };
+}
+
+const greekAdjectiveFamilies = {
+  eta:[buildGreek212("agathos","bo","ἀγαθ","η"),buildGreek212("sophos","sabio","σοφ","η")],
+  alpha:[buildGreek212("mikros","pequeno","μικρ","α")],
+  two:[{id:"athanatos",label:"inmortal",enunciation:"ἀθάνατος, ἀθάνατον",M:{sg:{NOM:"ἀθάνατος",VOC:"ἀθάνατε",AC:"ἀθάνατον",XEN:"ἀθανάτου",DAT:"ἀθανάτῳ"},pl:{NOM:"ἀθάνατοι",VOC:"ἀθάνατοι",AC:"ἀθανάτους",XEN:"ἀθανάτων",DAT:"ἀθανάτοις"}},F:{sg:{NOM:"ἀθάνατος",VOC:"ἀθάνατε",AC:"ἀθάνατον",XEN:"ἀθανάτου",DAT:"ἀθανάτῳ"},pl:{NOM:"ἀθάνατοι",VOC:"ἀθάνατοι",AC:"ἀθανάτους",XEN:"ἀθανάτων",DAT:"ἀθανάτοις"}},N:{sg:{NOM:"ἀθάνατον",VOC:"ἀθάνατον",AC:"ἀθάνατον",XEN:"ἀθανάτου",DAT:"ἀθανάτῳ"},pl:{NOM:"ἀθάνατα",VOC:"ἀθάνατα",AC:"ἀθάνατα",XEN:"ἀθανάτων",DAT:"ἀθανάτοις"}}}]
+};
+
+const greekPronounCases=["NOM","AC","XEN","DAT"];
+const greekPronouns={
+  article:{label:"ὁ · ἡ · τό",kind:"artigo",note:"Non ten vocativo. Concorda co substantivo en caso, número e xénero.",sg:{NOM:["ὁ","ἡ","τό"],AC:["τόν","τήν","τό"],XEN:["τοῦ","τῆς","τοῦ"],DAT:["τῷ","τῇ","τῷ"]},pl:{NOM:["οἱ","αἱ","τά"],AC:["τούς","τάς","τά"],XEN:["τῶν","τῶν","τῶν"],DAT:["τοῖς","ταῖς","τοῖς"]}},
+  hode:{label:"ὅδε · ἥδε · τόδε",kind:"demostrativo",note:"Declínase como o artigo co elemento -δε unido a cada forma.",sg:{NOM:["ὅδε","ἥδε","τόδε"],AC:["τόνδε","τήνδε","τόδε"],XEN:["τοῦδε","τῆσδε","τοῦδε"],DAT:["τῷδε","τῇδε","τῷδε"]},pl:{NOM:["οἵδε","αἵδε","τάδε"],AC:["τούσδε","τάσδε","τάδε"],XEN:["τῶνδε","τῶνδε","τῶνδε"],DAT:["τοῖσδε","ταῖσδε","τοῖσδε"]}}
+};
+
+const greekPersonalPronouns={
+  ego:{label:"ἐγώ · ἡμεῖς",sg:{NOM:"ἐγώ",AC:"ἐμέ / με",XEN:"ἐμοῦ / μου",DAT:"ἐμοί / μοι"},pl:{NOM:"ἡμεῖς",AC:"ἡμᾶς",XEN:"ἡμῶν",DAT:"ἡμῖν"}},
+  sy:{label:"σύ · ὑμεῖς",sg:{NOM:"σύ",AC:"σέ",XEN:"σοῦ",DAT:"σοί"},pl:{NOM:"ὑμεῖς",AC:"ὑμᾶς",XEN:"ὑμῶν",DAT:"ὑμῖν"}}
+};

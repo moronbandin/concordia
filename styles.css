@@ -139,6 +139,7 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
 .ending-pair{font-family:"New York",Georgia,serif;font-size:16px}
 .greek-card .lexeme,.greek-card .form-word,.greek-card + .ending-cell,.greek-mode .ending-pair,.greek-statement strong,.greek-statement b{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif}
 .greek-mode .latin-word,.greek-mode .predicate-sentence,.greek-mode .contrast-item div,.greek-mode .number-pairs span{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif}
+.greek-mode .adjective-table td,.greek-mode .adjective-heading strong,.greek-mode .personal-table b,.greek-form{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif}
 .greek-article{color:var(--muted);font-size:.72em;margin-right:2px}
 .optional-toggle{margin:14px auto 0;display:flex;align-items:center;gap:7px;border:0;background:transparent;color:#626871;font-size:12px;cursor:pointer;padding:7px 10px}
 .optional-toggle:hover{color:var(--ink)}
