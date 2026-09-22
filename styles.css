@@ -216,6 +216,8 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
 .statement-demo{max-width:900px;margin:0 auto;display:grid;gap:22px}
 .statement-rule{display:flex;align-items:center;justify-content:center;gap:14px;padding:13px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.72);border-radius:10px;font-size:12px;font-weight:750;letter-spacing:.06em;color:#4e555e}
 .statement-rule strong{font-size:20px;color:var(--accent)}
+.statement-rule.enunciation-rule{flex-wrap:wrap;row-gap:8px}
+.statement-rule.enunciation-rule span{font-size:10px;text-align:center}
 .ambiguity-question{display:flex;align-items:baseline;justify-content:center;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:14px}
 .ambiguity-question strong{font-family:"New York",Georgia,serif;font-size:52px;font-weight:500;color:var(--ink)}
 .statement-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -224,6 +226,9 @@ h1{font-size:22px;line-height:1.12;margin:0 0 5px;font-weight:820;letter-spacing
 .statement-path.feminine{background:rgba(98,181,231,.075)}
 .statement-path.neuter{background:rgba(235,148,47,.075)}
 .statement-path strong{font-family:"New York",Georgia,serif;font-size:26px;font-weight:500}
+.enunciation-rule + .lesson-intro{font-size:25px}
+.enunciation-examples{grid-template-columns:repeat(2,1fr)}
+.greek-statement .statement-path strong{font-family:"Palatino Linotype",Palatino,"Times New Roman",serif}
 .statement-path span:last-child{color:var(--muted);font-size:13px;line-height:1.45}
 .path-label{font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .statement-examples{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}

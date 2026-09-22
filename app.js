@@ -20,7 +20,7 @@ let state = {
 
 const greekSectionConfig = {
   nominal:{crumb:"Formas · Flexión nominal grega",tabs:["Visión xeral","1.ª","2.ª","3.ª","Por caso","Por xénero"],kind:"nominal"},
-  statements:{crumb:"Formas · Enunciados gregos",tabs:[],kind:"statements"},
+  statements:{crumb:"Formas · Enunciados gregos",tabs:["Substantivos","Adxectivos","Pronomes e determinantes","Verbos"],kind:"statements"},
   agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"}
 };
 
@@ -303,6 +303,10 @@ function renderStatements(){
     renderGreekStatements();
     return;
   }
+  if(state.tab !== "Substantivos"){
+    renderInflectedEnunciations("latin");
+    return;
+  }
   setVisible("statementsView");
   $("#title").textContent = "O enunciado identifica a palabra";
   $("#lede").textContent = "Nos substantivos dáse sempre o nominativo singular e o xenitivo singular.";
@@ -342,6 +346,10 @@ function renderStatements(){
 }
 
 function renderGreekStatements(){
+  if(state.tab !== "Substantivos"){
+    renderInflectedEnunciations("greek");
+    return;
+  }
   setVisible("statementsView");
   $("#title").textContent = "O enunciado identifica a palabra grega";
   $("#lede").textContent = "Nos substantivos dáse nominativo singular, xenitivo singular e artigo.";
@@ -367,6 +375,71 @@ function renderGreekStatements(){
         <span><strong>σῶμα, σώματος, τό</strong> · 3.ª ⚲</span>
       </div>
     </div>`;
+}
+
+function renderInflectedEnunciations(language){
+  setVisible("statementsView");
+  const isGreek = language === "greek";
+  const content = {
+    latin:{
+      "Adxectivos":{
+        title:"O enunciado mostra cantas terminacións ten o adxectivo",lede:"As formas do enunciado indican como se reparte o adxectivo entre masculino, feminino e neutro.",focus:"Tres · dúas · unha terminación",signal:"O número de terminacións refírese ao nominativo singular.",rule:["FORMAS DE NOMINATIVO","+","XENITIVO, CANDO É NECESARIO"],
+        cards:[
+          ["Tres terminacións","bonus, bona, bonum","Unha forma para cada xénero. Tamén: pulcher, pulchra, pulchrum."],
+          ["Dúas terminacións","fortis, forte","Fortis serve para masculino e feminino; forte para neutro."],
+          ["Unha terminación","prudens, prudentis","Prudens serve para os tres xéneros; o xenitivo prudentis permite coñecer o tema prudent-." ]
+        ],examples:["magnus, magna, magnum","pulcher, pulchra, pulchrum","fortis, forte","prudens, prudentis"]
+      },
+      "Pronomes e determinantes":{
+        title:"O enunciado distingue as formas de xénero",lede:"Nos pronomes e determinantes variables danse normalmente as formas do nominativo singular masculino, feminino e neutro.",focus:"M · F · N",signal:"As tres formas permiten identificar o paradigma que hai detrás dunha forma illada.",rule:["NOM SG MASCULINO","+","NOM SG FEMININO","+","NOM SG NEUTRO"],
+        cards:[
+          ["Anafórico","is, ea, id","As tres formas presentan os xéneros do paradigma."],
+          ["Demostrativo","hic, haec, hoc","O enunciado identifica un paradigma con numerosas formas propias."],
+          ["Relativo","qui, quae, quod","Masculino, feminino e neutro aparecen na orde habitual."]
+        ],examples:["iste, ista, istud","ille, illa, illud","ipse, ipsa, ipsum","alius, alia, aliud"]
+      },
+      "Verbos":{
+        title:"O enunciado reúne os temas do verbo",lede:"Unha soa forma non permite construír todo o paradigma verbal; por iso o enunciado ofrece varias formas principais.",focus:"Presente · infinitivo · perfecto · supino",signal:"As formas principais permiten obter os temas cos que se constrúen tempos e voces.",rule:["1.ª SG PRESENTE","+","2.ª SG PRESENTE","+","INFINITIVO","+","1.ª SG PERFECTO","+","SUPINO"],
+        cards:[
+          ["Modelo regular","amo, amas, amare, amavi, amatum","As cinco formas identifican a conxugación e os temas de presente, perfecto e supino."],
+          ["Terceira conxugación","lego, legis, legere, legi, lectum","O perfecto e o supino non sempre se poden deducir do presente."],
+          ["Verbo irregular","sum, es, esse, fui","Non ten supino; o enunciado conserva só as formas que existen."]
+        ],examples:["video, vides, videre, vidi, visum","capio, capis, capere, cepi, captum","venio, venis, venire, veni, ventum"]
+      }
+    },
+    greek:{
+      "Adxectivos":{
+        title:"O enunciado mostra a distribución dos xéneros",lede:"Os adxectivos gregos poden presentar tres, dúas ou unha terminación no nominativo singular.",focus:"Tres · dúas · unha terminación",signal:"Cando o nominativo non revela o tema, engádese o xenitivo.",rule:["FORMAS DE NOMINATIVO","+","XENITIVO, CANDO É NECESARIO"],
+        cards:[
+          ["Tres terminacións","ἀγαθός, ἀγαθή, ἀγαθόν","Unha forma distinta para masculino, feminino e neutro."],
+          ["Dúas terminacións","ἄδικος, ἄδικον","Masculino e feminino comparten ἄδικος; o neutro presenta ἄδικον."],
+          ["Unha terminación","πένης, πένητος","Unha forma de nominativo común; o xenitivo permite recuperar o tema." ]
+        ],examples:["σοφός, σοφή, σοφόν","δίκαιος, δικαία, δίκαιον","ἀθάνατος, ἀθάνατον","πένης, πένητος"]
+      },
+      "Pronomes e determinantes":{
+        title:"O enunciado presenta masculino, feminino e neutro",lede:"Nos demostrativos, relativos e no artigo danse as tres formas do nominativo singular.",focus:"M · F · N",signal:"As formas iniciais identifican o paradigma e fan visible o xénero.",rule:["NOM SG MASCULINO","+","NOM SG FEMININO","+","NOM SG NEUTRO"],
+        cards:[
+          ["Artigo","ὁ, ἡ, τό","As tres formas funcionan tamén como sinal de xénero no enunciado dos substantivos."],
+          ["Demostrativo","ὅδε, ἥδε, τόδε","O elemento -δε permanece unido ás formas do artigo."],
+          ["Relativo","ὅς, ἥ, ὅ","O enunciado permite distinguir as tres formas de nominativo."]
+        ],examples:["οὗτος, αὕτη, τοῦτο","ἐκεῖνος, ἐκείνη, ἐκεῖνο","αὐτός, αὐτή, αὐτό","τίς, τί"]
+      },
+      "Verbos":{
+        title:"O enunciado reúne as formas principais do verbo",lede:"Os seis temas principais permiten recoñecer e formar os tempos e as voces do verbo grego.",focus:"Seis formas principais",signal:"Non todos os verbos presentan regularmente as seis formas.",rule:["PRESENTE","+","FUTURO","+","AORISTO","+","PERFECTO","+","PERF. MEDIO","+","AOR. PASIVO"],
+        cards:[
+          ["Modelo regular","λύω, λύσω, ἔλυσα, λέλυκα, λέλυμαι, ἐλύθην","As seis formas mostran os temas de presente, futuro, aoristo, perfecto, medio e pasivo."],
+          ["Verbo do corpus","παιδεύω, παιδεύσω, ἐπαίδευσα, πεπαίδευκα, πεπαίδευμαι, ἐπαιδεύθην","O enunciado permite recoñecer formas que non conservan exactamente o aspecto do presente."],
+          ["Verbo irregular","εἰμί, ἔσομαι","O verbo ser non presenta unha serie regular de seis formas principais."]
+        ],examples:["λέγω, ἐρῶ, εἶπον, εἴρηκα, εἴρημαι, ἐρρήθην","φέρω, οἴσω, ἤνεγκον, ἐνήνοχα, ἐνήνεγμαι, ἠνέχθην","γιγνώσκω, γνώσομαι, ἔγνων, ἔγνωκα, ἔγνωσμαι, ἐγνώσθην"]
+      }
+    }
+  }[language][state.tab];
+  $("#title").textContent=content.title;
+  $("#lede").textContent=content.lede;
+  $("#conceptFact").textContent=`Enunciado · ${state.tab.toLowerCase()}`;
+  $("#focusFact").textContent=content.focus;
+  $("#signalFact").textContent=content.signal;
+  $("#statementsView").innerHTML=`<div class="statement-demo ${isGreek?"greek-statement":""}"><div class="statement-rule enunciation-rule">${content.rule.map(item=>item==="+"?"<strong>+</strong>":`<span>${item}</span>`).join("")}</div><p class="lesson-intro">${content.lede}</p><div class="statement-paths three-paths">${content.cards.map(([label,form,text])=>`<article class="statement-path"><span class="path-label">${label}</span><strong>${form}</strong><span>${text}</span></article>`).join("")}</div><div class="statement-examples enunciation-examples">${content.examples.map(example=>`<span><strong>${example}</strong></span>`).join("")}</div></div>`;
 }
 
 function renderAdjectives(){
