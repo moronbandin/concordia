@@ -16,6 +16,8 @@ let state = {
   adjectiveFamily:"us",
   adjective:"bonus",
   greekAdjective:"agathos",
+  greekVerbTense:"present",
+  greekVerbVoice:"active",
   predicate:0,
   ambiguity:"bare"
 };
@@ -25,7 +27,8 @@ const greekSectionConfig = {
   statements:{crumb:"Formas · Enunciados gregos",tabs:["Substantivos","Adxectivos","Pronomes e determinantes","Verbos"],kind:"statements"},
   agreement:{crumb:"Formas · Concordancia grega",tabs:["Nominal","Artigo e posición","Suxeito · atributo","Xénero","Número","Neutro"],kind:"agreement"},
   adjectives:{crumb:"Formas · Adxectivos gregos",tabs:["Visión xeral","-ος · -η · -ον","-ος · -α · -ον","Dúas terminacións"],kind:"adjectives"},
-  pronouns:{crumb:"Formas · Flexión pronominal grega",tabs:["Visión xeral","Artigo","ὅδε · ἥδε · τόδε","Persoais"],kind:"pronouns"}
+  pronouns:{crumb:"Formas · Flexión pronominal grega",tabs:["Visión xeral","Artigo","ὅδε · ἥδε · τόδε","Persoais"],kind:"pronouns"},
+  verbs:{crumb:"Formas · Flexión verbal grega",tabs:["λύω","Contractos · -άω","Contractos · -έω","Contractos · -όω"],kind:"greekVerbs"}
 };
 
 function currentConfig(){
@@ -905,6 +908,33 @@ function renderCum(){
   </div>`;
 }
 
+function renderGreekVerbs(){
+  setVisible("placeholderView");
+  const key=state.tab==="λύω"?"lyo":state.tab.endsWith("-άω")?"ao":state.tab.endsWith("-έω")?"eo":"oo";
+  const verb=greekVerbParadigms[key];
+  const tense=state.greekVerbTense;
+  const voice=state.greekVerbVoice;
+  const tenseLabel=tense==="present"?"Presente":"Imperfecto";
+  const voiceLabel=voice==="active"?"Activa":"Media";
+  $("#title").textContent=key==="lyo"?"Paradigma de λύω":`${verb.label} · verbos contractos en ${verb.type}`;
+  $("#lede").textContent=key==="lyo"?"Todas as persoas do presente e do imperfecto de indicativo, nas voces activa e media.":"Compara a unión teórica de tema e desinencia coa forma contracta que aparece nos textos.";
+  $("#conceptFact").textContent="Flexión verbal grega";
+  $("#focusFact").textContent=`${tenseLabel} · ${voiceLabel}`;
+  $("#signalFact").textContent=key==="lyo"?verb.enunciation:verb.rule;
+  const forms=verb.forms[tense][voice];
+  $("#placeholderView").innerHTML=`<div class="greek-verb-lab">
+    <div class="verb-toolbar">
+      <div class="verb-switch" aria-label="Tempo"><button class="${tense==="present"?"active":""}" data-greek-tense="present">Presente</button><button class="${tense==="imperfect"?"active":""}" data-greek-tense="imperfect">Imperfecto</button></div>
+      <div class="verb-switch" aria-label="Voz"><button class="${voice==="active"?"active":""}" data-greek-voice="active">Activa</button><button class="${voice==="middle"?"active":""}" data-greek-voice="middle">Media</button></div>
+    </div>
+    <div class="verb-identity"><div><span>${key==="lyo"?"VERBO MODELO":`CONTRACTO ${verb.type}`}</span><strong>${verb.label}</strong><small>${verb.meaning}</small></div>${key==="lyo"?`<p>${verb.enunciation}</p>`:`<p>${verb.rule}</p>`}</div>
+    <div class="verb-table-wrap"><table class="verb-table ${key==="lyo"?"simple":"contract"}"><thead><tr><th>Persoa</th>${key==="lyo"?`<th>${tenseLabel} · ${voiceLabel}</th>`:"<th>Sen contraer</th><th aria-hidden=\"true\"></th><th>Forma contracta</th>"}</tr></thead><tbody>${greekVerbPersons.map((person,index)=>{const row=forms[index];return `<tr><th>${person}</th>${key==="lyo"?`<td class="verb-result">${row}</td>`:`<td class="verb-source">${row[0]}</td><td class="verb-arrow">→</td><td class="verb-result">${row[1]}</td>`}</tr>`;}).join("")}</tbody></table></div>
+    ${key==="lyo"?`<div class="verb-reading"><span><b>Presente</b> tema λυ- + desinencias primarias</span><span><b>Imperfecto</b> aumento ἐ- + tema λυ- + desinencias secundarias</span><span><b>Media</b> o suxeito participa ou se interesa na acción</span></div>`:`<div class="contraction-strip"><span>tema vocálico</span><b>+</b><span>desinencia</span><b>→</b><strong>unha soa vogal longa ou ditongo</strong></div>`}
+  </div>`;
+  document.querySelectorAll("[data-greek-tense]").forEach(button=>button.onclick=()=>{state.greekVerbTense=button.dataset.greekTense;renderGreekVerbs();});
+  document.querySelectorAll("[data-greek-voice]").forEach(button=>button.onclick=()=>{state.greekVerbVoice=button.dataset.greekVoice;renderGreekVerbs();});
+}
+
 function render(){
   const config = currentConfig();
   renderSubnav();
@@ -915,6 +945,7 @@ function render(){
   if(config.kind === "adjectives") renderAdjectives();
   if(config.kind === "pronouns") renderPronouns();
   if(config.kind === "cum") renderCum();
+  if(config.kind === "greekVerbs") renderGreekVerbs();
   if(config.kind === "placeholder") renderPlaceholder();
 }
 
@@ -927,6 +958,14 @@ document.querySelectorAll(".navitem").forEach(button => {
     if(state.section === "nominal") state.mode = "case";
     if(state.section === "agreement") state.agreement = state.language === "greek" ? 0 : agreementExamples.findIndex(example => example.id === "fluvius-magnus");
     render();
+  };
+});
+
+document.querySelectorAll(".navtitle").forEach(button => {
+  button.onclick = () => {
+    const group = button.closest(".navgroup");
+    const collapsed = group.classList.toggle("collapsed");
+    button.setAttribute("aria-expanded",String(!collapsed));
   };
 });
 
