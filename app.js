@@ -857,6 +857,54 @@ function renderPlaceholder(){
   ` : `<div class="agreement-stage"><p class="lede">Contido en preparación.</p></div>`;
 }
 
+function renderCum(){
+  setVisible("placeholderView");
+  $("#conceptFact").textContent="Valores de cum";
+  $("#focusFact").textContent=state.tab;
+  if(state.tab==="Mapa"){
+    $("#title").textContent="Como interpretar cum";
+    $("#lede").textContent="Mira primeiro que aparece despois de cum; se hai verbo, comproba o modo e o tempo.";
+    $("#signalFact").textContent="ABL → preposición · IND → temporal · SUBX → histórico ou matiz circunstancial.";
+    $("#placeholderView").innerHTML=`<div class="cum-map">
+      <div class="cum-origin">cum</div>
+      <div class="cum-question">Que introduce?</div>
+      <section class="cum-branch preposition"><div class="cum-branch-head"><span>UN NOME</span><strong>ABL</strong></div><div class="cum-formula"><b>cum</b><i>+</i><em>amicis</em></div><p>Preposición: <strong>con</strong> ou, en contexto hostil, <strong>contra</strong>.</p><button data-cum-tab="Preposición + ABL">Explorar</button></section>
+      <section class="cum-branch indicative"><div class="cum-branch-head"><span>UN VERBO</span><strong>IND</strong></div><div class="cum-formula"><b>cum</b><i>+</i><em>venit</em></div><p>Conxunción temporal: presenta un feito como real, <strong>cando</strong>.</p><button data-cum-tab="Temporal + IND">Explorar</button></section>
+      <section class="cum-branch subjunctive"><div class="cum-branch-head"><span>UN VERBO</span><strong>SUBX</strong></div><div class="cum-formula"><b>cum</b><i>+</i><em>veniret / venisset</em></div><p>Histórico, causal ou concesivo: o tempo e o contexto precisan o valor.</p><div class="cum-branch-buttons"><button data-cum-tab="Histórico · IMPF">IMPF</button><button data-cum-tab="Histórico · PLUSC">PLUSC</button><button data-cum-tab="Outros usos">Outros</button></div></section>
+    </div>`;
+    document.querySelectorAll("[data-cum-tab]").forEach(button=>button.onclick=()=>{state.tab=button.dataset.cumTab;render();});
+    return;
+  }
+  if(state.tab==="Outros usos"){
+    $("#title").textContent="Outros valores de cum";
+    $("#lede").textContent="O contexto, o modo verbal e algunhas partículas correlativas permiten recoñecer os valores menos frecuentes.";
+    $("#signalFact").textContent="tamen sinala a concesiva; tum pode acompañar o valor iterativo; vix prepara o cum inversum.";
+    const uses=[
+      {kind:"CAUSAL",mode:"SUBX · PRES / PERF",meaning:"porque · posto que",latin:"Cum hoc sciat, tacet.",translation:"Posto que sabe isto, cala.",signal:"A subordinada presenta a causa."},
+      {kind:"CONCESIVO",mode:"SUBX + tamen",meaning:"aínda que",latin:"Cum fessus sit, tamen laborat.",translation:"Aínda que está canso, traballa.",signal:"tamen na principal fai visible a oposición."},
+      {kind:"ITERATIVO",mode:"IND",meaning:"sempre que",latin:"Verres, cum rosam videbat, tum arbitrabatur incipere ver.",translation:"Verres, sempre que vía unha rosa, pensaba que comezaba a primavera.",signal:"cum… tum organiza unha acción repetida."},
+      {kind:"INVERSUM",mode:"IND",meaning:"cando de súpeto",latin:"Vix annus intercesserat, cum Sulpicius Norbanum accusavit.",translation:"Apenas pasara un ano cando Sulpicio acusou a Norbano.",signal:"cum introduce o feito novo e inmediato."}
+    ];
+    $("#placeholderView").innerHTML=`<div class="cum-other-grid">${uses.map(use=>`<article class="cum-use"><header><span>${use.kind}</span><b>${use.mode}</b></header><div class="cum-meaning">${use.meaning}</div><div class="cum-latin">${use.latin}</div><div class="cum-translation">${use.translation}</div><p>${use.signal}</p></article>`).join("")}</div>`;
+    return;
+  }
+  const lesson=cumLessons[state.tab];
+  $("#title").textContent=state.tab;
+  $("#lede").textContent=lesson.relation;
+  $("#signalFact").textContent=`${lesson.mode} · ${lesson.time} · ${lesson.meaning}`;
+  const historical=state.tab.startsWith("Histórico");
+  const timeline=state.tab==="Histórico · IMPF"
+    ? `<div class="cum-timeline simultaneous"><span class="sub-action">cum + IMPF SUBX</span><span class="main-action">acción principal</span><small>marco simultáneo ou en desenvolvemento</small></div>`
+    : state.tab==="Histórico · PLUSC"?`<div class="cum-timeline anterior"><span class="sub-action">cum + PLUSC SUBX</span><span class="arrow">→</span><span class="main-action">acción principal</span><small>anterioridade clara</small></div>`:"";
+  $("#placeholderView").innerHTML=`<div class="cum-lesson">
+    <div class="cum-rule-stage"><span>${lesson.eyebrow}</span><div class="cum-rule-formula">${lesson.formula.map(part=>part==="+"?"<i>+</i>":`<strong>${part}</strong>`).join("")}</div><div class="cum-rule-meaning">${lesson.meaning}</div></div>
+    <div class="cum-signals"><div><span>Modo</span><strong>${lesson.mode}</strong></div><div><span>Tempo</span><strong>${lesson.time}</strong></div><div><span>Relación</span><strong>${lesson.relation}</strong></div></div>
+    ${timeline}
+    ${lesson.translations?`<div class="cum-translations">${lesson.translations.map((translation,index)=>`<span><b>${index+1}</b>${translation}</span>`).join("")}</div>`:""}
+    <div class="cum-examples ${lesson.examples.length===2?"two":""}">${lesson.examples.map(example=>`<article><span class="cum-example-note">${example.note}</span><div class="cum-example-latin">${example.latin.replace(example.focus,`<mark>${example.focus}</mark>`)}</div><div class="cum-example-translation">${example.translation}</div></article>`).join("")}</div>
+  </div>`;
+}
+
 function render(){
   const config = currentConfig();
   renderSubnav();
@@ -866,6 +914,7 @@ function render(){
   if(config.kind === "agreement") renderAgreement();
   if(config.kind === "adjectives") renderAdjectives();
   if(config.kind === "pronouns") renderPronouns();
+  if(config.kind === "cum") renderCum();
   if(config.kind === "placeholder") renderPlaceholder();
 }
 

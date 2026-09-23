@@ -171,8 +171,41 @@ const sectionConfig = {
   participle:{crumb:"Estruturas · Participio",tabs:["Concertado","Ablativo absoluto","Valor temporal"],kind:"placeholder"},
   aci:{crumb:"Estruturas · Infinitivo / AcI",tabs:["Infinitivo","AcI","Transformación"],kind:"placeholder"},
   relative:{crumb:"Estruturas · Relativo",tabs:["Antecedente","Caso propio","Atracción"],kind:"placeholder"},
-  cum:{crumb:"Estruturas · cum",tabs:["Preposición","Temporal","Causal","Concesivo"],kind:"placeholder"},
+  cum:{crumb:"Estruturas · cum",tabs:["Mapa","Preposición + ABL","Temporal + IND","Histórico · IMPF","Histórico · PLUSC","Outros usos"],kind:"cum"},
   ut:{crumb:"Estruturas · ut / ne",tabs:["Final","Completiva","Consecutiva"],kind:"placeholder"}
+};
+
+const cumLessons = {
+  "Preposición + ABL":{
+    eyebrow:"PREPOSICIÓN",formula:["cum","+","ABL"],meaning:"con · contra",mode:"sen verbo propio",time:"—",relation:"compañía · unión · hostilidade",
+    examples:[
+      {latin:"Pueri in horto cum suis amicis ludunt.",focus:"cum suis amicis",translation:"Os nenos xogan no xardín cos seus amigos.",note:"compañía"},
+      {latin:"Nautae cum piratis pugnant.",focus:"cum piratis",translation:"Os mariñeiros loitan contra os piratas.",note:"hostilidade"},
+      {latin:"Romani cum Vercingetorigis militibus pugnant.",focus:"cum Vercingetorigis militibus",translation:"Os romanos loitan contra os soldados de Vercinxetórix.",note:"o xenitivo intercálase; militibus segue sendo ablativo"}
+    ]
+  },
+  "Temporal + IND":{
+    eyebrow:"CONXUNCIÓN TEMPORAL",formula:["cum","+","IND"],meaning:"cando",mode:"indicativo",time:"calquera tempo de indicativo",relation:"sitúa unha acción no tempo",
+    examples:[
+      {latin:"Cum Caesar in Galliam venit, bellum incipit.",focus:"Cum Caesar in Galliam venit",translation:"Cando César chega á Galia, comeza a guerra.",note:"feito presentado como real"},
+      {latin:"Cotidie morimur et, cum crescimus, vita decrescit.",focus:"cum crescimus",translation:"Cada día morremos e, cando medramos, a vida decrece.",note:"valor temporal xeral"},
+      {latin:"Cum primum Caesar advenit, milites convocat.",focus:"Cum primum Caesar advenit",translation:"Tan pronto como César chega, convoca os soldados.",note:"cum primum expresa inmediatez"}
+    ]
+  },
+  "Histórico · IMPF":{
+    eyebrow:"CUM HISTÓRICO",formula:["cum","+","IMPF SUBX"],meaning:"ao… · mentres… · como…",mode:"subxuntivo",time:"imperfecto",relation:"acción simultánea ou marco da principal",
+    examples:[
+      {latin:"Atticus, cum Athenis esset, Zenonem philosophum audivit.",focus:"cum Athenis esset",translation:"Ático, ao estar en Atenas, escoitou o filósofo Zenón.",note:"esset crea o marco; audivit fai avanzar a narración"},
+      {latin:"Cum hostes venirent, Romani portas clauserunt.",focus:"Cum hostes venirent",translation:"Ao chegaren os inimigos, os romanos pecharon as portas.",note:"acción en desenvolvemento, próxima á principal"}
+    ],translations:["ao + infinitivo","xerundio simple","como + imperfecto"]
+  },
+  "Histórico · PLUSC":{
+    eyebrow:"CUM HISTÓRICO",formula:["cum","+","PLUSC SUBX"],meaning:"despois de… · tras… · como…",mode:"subxuntivo",time:"pluscuamperfecto",relation:"acción anterior á principal",
+    examples:[
+      {latin:"Cum hostes venissent, Romani portas clauserunt.",focus:"Cum hostes venissent",translation:"Despois de chegaren os inimigos, os romanos pecharon as portas.",note:"venissent sucede antes de clauserunt"},
+      {latin:"Tullus Hostilius, cum triginta et duos annos regnavisset, fulmine ictus arsit.",focus:"cum triginta et duos annos regnavisset",translation:"Tulo Hostilio, tras reinar trinta e dous anos, alcanzado por un raio, ardeu.",note:"regnavisset presenta unha acción xa completada"}
+    ],translations:["despois de / tras + infinitivo","xerundio composto","como + pluscuamperfecto"]
+  }
 };
 
 const courseExamples = {
