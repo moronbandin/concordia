@@ -961,6 +961,17 @@ document.querySelectorAll(".navitem").forEach(button => {
   };
 });
 
+const sidebarToggle=$("#sidebarToggle");
+function setSidebarCollapsed(collapsed){
+  document.body.classList.toggle("nav-collapsed",collapsed);
+  sidebarToggle.setAttribute("aria-expanded",String(!collapsed));
+  sidebarToggle.title=collapsed?"Expandir navegación":"Contraer navegación";
+  sidebarToggle.querySelector("span:last-child").textContent=collapsed?"Expandir":"Contraer";
+  try{localStorage.setItem("concordia-nav-collapsed",String(collapsed));}catch(error){}
+}
+sidebarToggle.onclick=()=>setSidebarCollapsed(!document.body.classList.contains("nav-collapsed"));
+try{setSidebarCollapsed(localStorage.getItem("concordia-nav-collapsed")==="true");}catch(error){}
+
 document.querySelectorAll(".navtitle").forEach(button => {
   button.onclick = () => {
     const group = button.closest(".navgroup");
